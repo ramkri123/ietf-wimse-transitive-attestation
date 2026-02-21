@@ -161,8 +161,14 @@
 
 <ul spacing="compact">
 <li><strong>CNCF SPIFFE/SPIRE</strong>: This draft formalizes the application-layer binding for SPIRE's node-to-workload attestation chain. It ensures that the short-lived SVIDs issued by SPIRE are cryptographically bound to the hardware-rooted residency assertion provided by the SPIRE Agent (acting as the WIA).</li>
-<li><strong>Confidential Computing Consortium (CCC)</strong>: Proof of Residency (PoR) provides the cryptographic evidence required for &quot;Sovereign AI&quot; and &quot;Data-in-Use&quot; protection models. In Confidential Computing (CC) environments, the hardware itself can generate direct, cryptographically signed quotes (e.g., using AMD SEV-SNP VCEK/VLEK keys). While these direct quotes provide hardware-direct residency, the <strong>Transitive Attestation</strong> model specified in this document serves as a <strong>privacy-preserving abstraction layer</strong>. It allows workloads to prove residency through the WIA without leaking unique silicon identities or requiring the workload to implement hardware-specific quoting logic.</li>
+<li><t><strong>Confidential Computing Consortium (CCC)</strong>: Proof of Residency (PoR) provides the cryptographic evidence required for &quot;Sovereign AI&quot; and &quot;Data-in-Use&quot; protection models. In Confidential Computing (CC) environments, the hardware itself can generate direct, cryptographically signed quotes (e.g., using AMD SEV-SNP VCEK/VLEK keys). These quotes typically include two distinct layers of evidence:</t>
+
+<ol spacing="compact">
+<li><strong>Platform Attributes</strong>: Measurements of the processor's identity, microcode version (TCB), and hardware security state.</li>
+<li><strong>Workload Measurements</strong>: Measurements of the workload's code/memory image and custom metadata (e.g., via the <tt>REPORT_DATA</tt> field).</li>
+</ol></li>
 </ul>
+<t>While these direct quotes provide high-assurance hardware-direct residency, the <strong>Transitive Attestation</strong> model specified in this document acts as the essential <strong>Identity Bridge</strong>. It maps these low-level, hardware-specific measurements to high-level <strong>Application Identities (SVIDs)</strong> and standard WIMSE residency proofs. This abstraction ensures that Verifiers and Relying Parties do not need to implement complex, vendor-specific measurement verification logic for every diverse hardware platform.</t>
 </section>
 
 <section anchor="security-considerations"><name>Security Considerations</name>

@@ -77,7 +77,7 @@ Table of Contents
        4.2.1.  DPoR Protocol Flow  . . . . . . . . . . . . . . . . .   4
    5.  Relation to Other IETF Work . . . . . . . . . . . . . . . . .   5
    6.  Other Related Efforts . . . . . . . . . . . . . . . . . . . .   7
-   7.  Security Considerations . . . . . . . . . . . . . . . . . . .   7
+   7.  Security Considerations . . . . . . . . . . . . . . . . . . .   8
    8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   8
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   8
 
@@ -368,12 +368,31 @@ Internet-Draft               WIMSE-TRANS-ATT               February 2026
       AI" and "Data-in-Use" protection models.  In Confidential
       Computing (CC) environments, the hardware itself can generate
       direct, cryptographically signed quotes (e.g., using AMD SEV-SNP
-      VCEK/VLEK keys).  While these direct quotes provide hardware-
-      direct residency, the *Transitive Attestation* model specified in
-      this document serves as a *privacy-preserving abstraction layer*.
-      It allows workloads to prove residency through the WIA without
-      leaking unique silicon identities or requiring the workload to
-      implement hardware-specific quoting logic.
+      VCEK/VLEK keys).  These quotes typically include two distinct
+      layers of evidence:
+      1.  *Platform Attributes*: Measurements of the processor's
+          identity, microcode version (TCB), and hardware security
+          state.
+      2.  *Workload Measurements*: Measurements of the workload's code/
+          memory image and custom metadata (e.g., via the REPORT_DATA
+          field).
+
+   While these direct quotes provide high-assurance hardware-direct
+   residency, the *Transitive Attestation* model specified in this
+   document acts as the essential *Identity Bridge*. It maps these low-
+   level, hardware-specific measurements to high-level *Application
+   Identities (SVIDs)* and standard WIMSE residency proofs.  This
+   abstraction ensures that Verifiers and Relying Parties do not need to
+   implement complex, vendor-specific measurement verification logic for
+   every diverse hardware platform.
+
+
+
+
+Krishnan, et al.         Expires 25 August 2026                 [Page 7]
+
+Internet-Draft               WIMSE-TRANS-ATT               February 2026
+
 
 7.  Security Considerations
 
@@ -386,14 +405,6 @@ Internet-Draft               WIMSE-TRANS-ATT               February 2026
    environment.  Any attempt to use the stolen credential requires a
    corresponding PoR assertion that is: 1.  *Hardware-Rooted*: Linked to
    the local WIA's signing interface and TPM/Secure Enclave. 2.
-
-
-
-Krishnan, et al.         Expires 25 August 2026                 [Page 7]
-
-Internet-Draft               WIMSE-TRANS-ATT               February 2026
-
-
    *Context-Specific*: Bound to a fresh, server-provided nonce and a
    current timestamp. 3.  *Protected*: Access to the WIA's signing
    capability is restricted by local Operating System permissions and
@@ -431,17 +442,6 @@ Authors' Addresses
    Srinivasa Addepalli
    Aryaka
    Email: srinivasa.addepalli@aryaka.com
-
-
-
-
-
-
-
-
-
-
-
 
 
 

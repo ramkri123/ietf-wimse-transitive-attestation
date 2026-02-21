@@ -1595,9 +1595,18 @@ li > p:last-of-type:only-child {
           <strong>CNCF SPIFFE/SPIRE</strong>: This draft formalizes the application-layer binding for SPIRE's node-to-workload attestation chain. It ensures that the short-lived SVIDs issued by SPIRE are cryptographically bound to the hardware-rooted residency assertion provided by the SPIRE Agent (acting as the WIA).<a href="#section-6-2.1" class="pilcrow">¶</a>
 </li>
         <li class="compact" id="section-6-2.2">
-          <strong>Confidential Computing Consortium (CCC)</strong>: Proof of Residency (PoR) provides the cryptographic evidence required for "Sovereign AI" and "Data-in-Use" protection models. In Confidential Computing (CC) environments, the hardware itself can generate direct, cryptographically signed quotes (e.g., using AMD SEV-SNP VCEK/VLEK keys). While these direct quotes provide hardware-direct residency, the <strong>Transitive Attestation</strong> model specified in this document serves as a <strong>privacy-preserving abstraction layer</strong>. It allows workloads to prove residency through the WIA without leaking unique silicon identities or requiring the workload to implement hardware-specific quoting logic.<a href="#section-6-2.2" class="pilcrow">¶</a>
+          <p id="section-6-2.2.1"><strong>Confidential Computing Consortium (CCC)</strong>: Proof of Residency (PoR) provides the cryptographic evidence required for "Sovereign AI" and "Data-in-Use" protection models. In Confidential Computing (CC) environments, the hardware itself can generate direct, cryptographically signed quotes (e.g., using AMD SEV-SNP VCEK/VLEK keys). These quotes typically include two distinct layers of evidence:<a href="#section-6-2.2.1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="compact type-1" id="section-6-2.2.2">
+<li id="section-6-2.2.2.1">
+              <strong>Platform Attributes</strong>: Measurements of the processor's identity, microcode version (TCB), and hardware security state.<a href="#section-6-2.2.2.1" class="pilcrow">¶</a>
+</li>
+            <li id="section-6-2.2.2.2">
+              <strong>Workload Measurements</strong>: Measurements of the workload's code/memory image and custom metadata (e.g., via the <code>REPORT_DATA</code> field).<a href="#section-6-2.2.2.2" class="pilcrow">¶</a>
+</li>
+          </ol>
 </li>
       </ul>
+<p id="section-6-3">While these direct quotes provide high-assurance hardware-direct residency, the <strong>Transitive Attestation</strong> model specified in this document acts as the essential <strong>Identity Bridge</strong>. It maps these low-level, hardware-specific measurements to high-level <strong>Application Identities (SVIDs)</strong> and standard WIMSE residency proofs. This abstraction ensures that Verifiers and Relying Parties do not need to implement complex, vendor-specific measurement verification logic for every diverse hardware platform.<a href="#section-6-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="security-considerations">
