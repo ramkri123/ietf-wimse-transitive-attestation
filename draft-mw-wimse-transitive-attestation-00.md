@@ -22,20 +22,20 @@ organization = "JPMorgan Chase & Co"
   email = "ramkri123@gmail.com"
 
 [[author]]
-initials = "D."
-surname = "Lopez"
-fullname = "Diego R. Lopez"
-organization = "Telefonica"
-  [author.address]
-  email = "diego.r.lopez@telefonica.com"
-
-[[author]]
 initials = "A."
 surname = "Prasad"
 fullname = "A Prasad"
 organization = "Oracle"
   [author.address]
   email = "a.prasad@oracle.com"
+
+[[author]]
+initials = "D."
+surname = "Lopez"
+fullname = "Diego R. Lopez"
+organization = "Telefonica"
+  [author.address]
+  email = "diego.r.lopez@telefonica.com"
 
 [[author]]
 initials = "S."
@@ -49,15 +49,15 @@ organization = "Aryaka"
 
 .# Abstract
 
-This document proposes a mechanism for Transitive Attestation within the Workload Identity in Multi-Service Environments (WIMSE) framework. It addresses the problem of identity portability and theft (e.g., via prompt injection) by requiring workloads to prove "residency"—a verifiable connection to a local, hardware-rooted Workload Identity Agent (WIA).
+This document proposes a mechanism for Transitive Attestation within the Workload Identity in Multi-Service Environments (WIMSE) framework. It addresses the problem of identity portability and the theft of credentials (such as private keys and bearer/DPoP tokens) by requiring workloads to prove "residency"—a verifiable connection to a local, hardware-rooted Workload Identity Agent (WIA).
 
 {mainmatter}
 
 # Introduction
 
-Current workload identity mechanisms, such as DPoP [[RFC9449]], focus on binding tokens to keys but do not necessarily ensure that the workload using the key is the one originally authorized or that it is executing in a verified context. If a private key is stolen (e.g., via Remote Code Execution or prompt injection on an AI agent/workload), it can often be used from a different, unverified location or environment.
+Current workload identity mechanisms, such as DPoP [[RFC9449]], focus on binding tokens to keys but do not necessarily ensure that the workload using the key is the one originally authorized or that it is executing in a verified context. If a private key or an active session token is stolen (e.g., via Remote Code Execution, side-channel attacks, or prompt injection on an AI agent), it can often be used from a different, unverified location or environment.
 
-This proposal introduces "Transitive Attestation" and "Proof of Residency (PoR)". A workload must obtain a fresh signature or proof from a local Workload Identity Agent (WIA) that has already been RATS-verified [[RFC9334]]. This ensures the identity is hardware-rooted (e.g., via TPM) and sensitive to the physical or logical residence of the workload.
+This proposal introduces "Transitive Attestation" and "Proof of Residency (PoR)". A workload must obtain a fresh signature or proof from a local Workload Identity Agent (WIA) that has already been RATS-verified [[RFC9334]]. This ensures the identity—and the usage of its associated credentials—is hardware-rooted (e.g., via TPM) and sensitive to the physical or logical residence of the workload.
 
 # Terminology
 
@@ -71,9 +71,9 @@ Workload Identity Agent (WIA):
 Proof of Residency (PoR):
 : A cryptographic proof that binds a workload's current execution session to a specific, verified local environment or host.
 
-# The Problem: Identity Portability
+# The Problem: Identity and Token Portability
 
-Workload identities are often represented by bearer tokens or keys that, once compromised, can be used by an attacker from any environment. This "portability" allows an attacker who achieves RCE on a workload (e.g., in Region A) to use the stolen credentials from an attacking machine (e.g., in Region B). Even binding keys to the workload (DPoP) does not prevent the key itself from being exported if the environment is not sufficiently isolated or hardware-protected.
+Workload identities are often represented by bearer tokens or keys that, once compromised, can be used by an attacker from any environment. This "portability" allows an attacker who achieves RCE on a workload (e.g., in Region A) to use the stolen keys or intercepted tokens from an attacking machine (e.g., in Region B). Even binding keys to the workload (DPoP) does not prevent the key itself from being exported if the environment is not sufficiently isolated, nor does it prevent a validly generated DPoP token from being replayed from a different VPC if the resource server does not enforce residency.
 
 # The Solution: Transitive Attestation for Proof of Residency
 

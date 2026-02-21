@@ -4,10 +4,10 @@
 
 WIMSE                                                        R. Krishnan
 Internet-Draft                                       JPMorgan Chase & Co
-Intended status: Informational                                  D. Lopez
-Expires: 25 August 2026                                       Telefonica
-                                                               A. Prasad
-                                                                  Oracle
+Intended status: Informational                                 A. Prasad
+Expires: 25 August 2026                                           Oracle
+                                                                D. Lopez
+                                                              Telefonica
                                                             S. Addepalli
                                                                   Aryaka
                                                         21 February 2026
@@ -20,10 +20,10 @@ Abstract
 
    This document proposes a mechanism for Transitive Attestation within
    the Workload Identity in Multi-Service Environments (WIMSE)
-   framework.  It addresses the problem of identity portability and
-   theft (e.g., via prompt injection) by requiring workloads to prove
-   "residency"—a verifiable connection to a local, hardware-rooted
-   Workload Identity Agent (WIA).
+   framework.  It addresses the problem of identity portability and the
+   theft of credentials (such as private keys and bearer/DPoP tokens) by
+   requiring workloads to prove "residency"—a verifiable connection to a
+   local, hardware-rooted Workload Identity Agent (WIA).
 
 Status of This Memo
 
@@ -68,7 +68,7 @@ Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
    2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   2
-   3.  The Problem: Identity Portability . . . . . . . . . . . . . .   3
+   3.  The Problem: Identity and Token Portability . . . . . . . . .   3
    4.  The Solution: Transitive Attestation for Proof of
            Residency . . . . . . . . . . . . . . . . . . . . . . . .   3
      4.1.  mTLS-based Transitive Attestation . . . . . . . . . . . .   3
@@ -85,17 +85,17 @@ Table of Contents
    Current workload identity mechanisms, such as DPoP [[RFC9449]], focus
    on binding tokens to keys but do not necessarily ensure that the
    workload using the key is the one originally authorized or that it is
-   executing in a verified context.  If a private key is stolen (e.g.,
-   via Remote Code Execution or prompt injection on an AI agent/
-   workload), it can often be used from a different, unverified location
-   or environment.
+   executing in a verified context.  If a private key or an active
+   session token is stolen (e.g., via Remote Code Execution, side-
+   channel attacks, or prompt injection on an AI agent), it can often be
+   used from a different, unverified location or environment.
 
    This proposal introduces "Transitive Attestation" and "Proof of
    Residency (PoR)".  A workload must obtain a fresh signature or proof
    from a local Workload Identity Agent (WIA) that has already been
-   RATS-verified [[RFC9334]].  This ensures the identity is hardware-
-   rooted (e.g., via TPM) and sensitive to the physical or logical
-   residence of the workload.
+   RATS-verified [[RFC9334]].  This ensures the identity—and the usage
+   of its associated credentials—is hardware-rooted (e.g., via TPM) and
+   sensitive to the physical or logical residence of the workload.
 
 2.  Terminology
 
@@ -126,16 +126,18 @@ Internet-Draft               WIMSE-TRANS-ATT               February 2026
       workload's current execution session to a specific, verified local
       environment or host.
 
-3.  The Problem: Identity Portability
+3.  The Problem: Identity and Token Portability
 
    Workload identities are often represented by bearer tokens or keys
    that, once compromised, can be used by an attacker from any
    environment.  This "portability" allows an attacker who achieves RCE
-   on a workload (e.g., in Region A) to use the stolen credentials from
-   an attacking machine (e.g., in Region B).  Even binding keys to the
-   workload (DPoP) does not prevent the key itself from being exported
-   if the environment is not sufficiently isolated or hardware-
-   protected.
+   on a workload (e.g., in Region A) to use the stolen keys or
+   intercepted tokens from an attacking machine (e.g., in Region B).
+   Even binding keys to the workload (DPoP) does not prevent the key
+   itself from being exported if the environment is not sufficiently
+   isolated, nor does it prevent a validly generated DPoP token from
+   being replayed from a different VPC if the resource server does not
+   enforce residency.
 
 4.  The Solution: Transitive Attestation for Proof of Residency
 
@@ -159,8 +161,6 @@ Internet-Draft               WIMSE-TRANS-ATT               February 2026
        certificate during the mTLS handshake containing a custom
        extension.  This extension includes the public key or SVID
        details of the local WIA (Attester).
-
-
 
 
 
@@ -367,14 +367,14 @@ Authors' Addresses
    Email: ramkri123@gmail.com
 
 
-   Diego R. Lopez
-   Telefonica
-   Email: diego.r.lopez@telefonica.com
-
-
    A Prasad
    Oracle
    Email: a.prasad@oracle.com
+
+
+   Diego R. Lopez
+   Telefonica
+   Email: diego.r.lopez@telefonica.com
 
 
    Srinivasa Addepalli
