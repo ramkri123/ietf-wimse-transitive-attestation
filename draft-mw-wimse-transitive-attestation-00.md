@@ -149,7 +149,7 @@ Additional relationships include:
 Outside of the IETF, this proposal aligns with several industry standards for secure workload execution:
 
 - **CNCF SPIFFE/SPIRE**: This draft formalizes the application-layer binding for SPIRE's node-to-workload attestation chain. It ensures that the short-lived SVIDs issued by SPIRE are cryptographically bound to the hardware-rooted residency assertion provided by the SPIRE Agent (acting as the WIA).
-- **Confidential Computing Consortium (CCC)**: Proof of Residency (PoR) provides the cryptographic evidence required for "Sovereign AI" and "Data-in-Use" protection models. It validates that a workload is executing within a verified Trusted Execution Environment (TEE) and has not been ported to an untrusted or geographically non-compliant host.
+- **Confidential Computing Consortium (CCC)**: Proof of Residency (PoR) provides the cryptographic evidence required for "Sovereign AI" and "Data-in-Use" protection models. In Confidential Computing (CC) environments, the hardware itself can generate direct, cryptographically signed quotes (e.g., using AMD SEV-SNP VCEK/VLEK keys). While these direct quotes provide hardware-direct residency, the **Transitive Attestation** model specified in this document serves as a **privacy-preserving abstraction layer**. It allows workloads to prove residency through the WIA without leaking unique silicon identities or requiring the workload to implement hardware-specific quoting logic.
 
 # Security Considerations
 
