@@ -176,3 +176,19 @@ This document has no IANA actions at this time.
     <date month="October" day="21" year="2024"/>
   </front>
 </reference>
+
+<reference anchor="I-D.lkspa-wimse-verifiable-geo-fence" target="https://datatracker.ietf.org/doc/html/draft-lkspa-wimse-verifiable-geo-fence">
+  <front>
+    <title>Zero-Trust Sovereign AI: Verifiable Geofencing &amp; Residency Proofs for Cybersecure Workloads</title>
+    <author initials="D." surname="Lopez" fullname="Diego Lopez"/>
+    <date month="February" day="11" year="2025"/>
+  </front>
+</reference>
+
+<reference anchor="I-D.novak-twi-attestation" target="https://datatracker.ietf.org/doc/html/draft-novak-twi-attestation">
+  <front>
+    <title>Remote Attestation for Trustworthy Workload Identity</title>
+    <author initials="N." surname="Novak" fullname="Ned Novak"/>
+    <date month="July" day="4" year="2024"/>
+  </front>
+</reference>
