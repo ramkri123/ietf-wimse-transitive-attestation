@@ -1606,7 +1606,10 @@ li > p:last-of-type:only-child {
           </ol>
 </li>
       </ul>
-<p id="section-6-3">While these direct quotes provide high-assurance hardware-direct residency, the <strong>Transitive Attestation</strong> model specified in this document acts as the essential <strong>Identity Bridge</strong>. It maps these low-level, hardware-specific measurements to high-level <strong>Application Identities (SVIDs)</strong> and standard WIMSE residency proofs. This abstraction ensures that Verifiers and Relying Parties do not need to implement complex, vendor-specific measurement verification logic for every diverse hardware platform.<a href="#section-6-3" class="pilcrow">¶</a></p>
+<p id="section-6-3">While these direct quotes provide high-assurance hardware-direct residency, the <strong>Transitive Attestation</strong> model specified in this document acts as the essential <strong>Identity Bridge</strong>. This bridge can manifest in two architectural patterns:
+    1.  <strong>Agent-Mediated Flow</strong>: Traditional in standard environments where a local WIA (e.g., a SPIRE Agent) performs the local attestation and translation before the workload receives its identity.
+    2.  <strong>Direct Quoting Flow</strong>: Typical in CC TEEs where the workload performs "Direct Quoting" of the hardware state. In this pattern, the <strong>transitive mapping</strong> from hardware evidence to application-layer identity (SVID) typically occurs at a remote <strong>Verifier/CA</strong> (e.g., a SPIRE Server) during the initial credential issuance phase.<a href="#section-6-3" class="pilcrow">¶</a></p>
+<p id="section-6-4">In both patterns, the result is the same: the high-level application identity becomes cryptographically bound to the hardware-rooted residency, ensuring that Verifiers and Relying Parties do not need to implement complex, vendor-specific measurement verification logic for every diverse hardware platform.<a href="#section-6-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="security-considerations">

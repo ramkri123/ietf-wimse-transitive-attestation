@@ -153,7 +153,11 @@ Outside of the IETF, this proposal aligns with several industry standards for se
     1.  **Platform Attributes**: Measurements of the processor's identity, microcode version (TCB), and hardware security state.
     2.  **Workload Measurements**: Measurements of the workload's code/memory image and custom metadata (e.g., via the `REPORT_DATA` field).
 
-  While these direct quotes provide high-assurance hardware-direct residency, the **Transitive Attestation** model specified in this document acts as the essential **Identity Bridge**. It maps these low-level, hardware-specific measurements to high-level **Application Identities (SVIDs)** and standard WIMSE residency proofs. This abstraction ensures that Verifiers and Relying Parties do not need to implement complex, vendor-specific measurement verification logic for every diverse hardware platform.
+  While these direct quotes provide high-assurance hardware-direct residency, the **Transitive Attestation** model specified in this document acts as the essential **Identity Bridge**. This bridge can manifest in two architectural patterns:
+    1.  **Agent-Mediated Flow**: Traditional in standard environments where a local WIA (e.g., a SPIRE Agent) performs the local attestation and translation before the workload receives its identity.
+    2.  **Direct Quoting Flow**: Typical in CC TEEs where the workload performs "Direct Quoting" of the hardware state. In this pattern, the **transitive mapping** from hardware evidence to application-layer identity (SVID) typically occurs at a remote **Verifier/CA** (e.g., a SPIRE Server) during the initial credential issuance phase.
+
+  In both patterns, the result is the same: the high-level application identity becomes cryptographically bound to the hardware-rooted residency, ensuring that Verifiers and Relying Parties do not need to implement complex, vendor-specific measurement verification logic for every diverse hardware platform.
 
 # Security Considerations
 
