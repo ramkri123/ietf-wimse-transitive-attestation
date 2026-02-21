@@ -21,6 +21,9 @@ Current workload identity mechanisms (like DPoP) focus on binding tokens to keys
 - **mTLS-based PoR**: Binds residency verification into the session establishment.
 - **DPoR (Demonstrating Proof of Residency)**: An enhancement to RFC 9449 (DPoP) that binds application-level requests to hardware attestation.
 
+### Local Binding Mechanism
+In the **Agent-Mediated flow**, the workload connects to the local **Workload Identity Agent (WIA)** (e.g., SPIRE Agent) through a **Unix Domain Socket (UDS)**. This kernel-enforced communication channel provides the initial cryptographic guarantee of local residency, ensuring the requester is co-located with the hardware-rooted agent.
+
 ## Chain of Accountability
 
 The proposal forms a three-layer trust stack that aligns IETF standards with physical reality:
