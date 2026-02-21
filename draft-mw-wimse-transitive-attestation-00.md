@@ -90,15 +90,20 @@ The mTLS-based flow integrates residency verification into the session establish
 1. **Certificate Extensions**: The client (workload) supplies an X.509 certificate during the mTLS handshake containing a custom extension. This extension includes the public key or SVID details of the local WIA (Attester).
 2. **Post-Handshake Nonce**: After the mTLS handshake is successfully completed, the client requests a residency-specific nonce from the resource server (Verifier/Relying Party) to ensure anti-replay.
 3. **Local Attestation Binding**: The client constructs a PoR assertion payload containing:
-    - A cryptographic hash of the mTLS session key.
+    - A cryptographic hash of the TLS Exporter value [[RFC5705]].
     - The residency nonce provided by the server.
     - A timestamp representing the current time of assertion creation.
+<br>
+
+> [!NOTE]
+> By binding to the TLS Exporter instead of the application traffic keys, the Proof of Residency remains valid across TLS 1.3 `KeyUpdate` operations. Standard key rotation refreshes traffic keys but does not change the exporter master secret, thus avoiding unnecessary re-attestation cycles while maintaining strong cryptographic binding to the session.
+
 4. **Agent Signature**: The client sends this payload to the local WIA (typically via a Unix Domain Socket). The WIA verifies the local peer environment and signs the payload with its private key.
 5. **PoR Submission**: The client sends this attested response to the resource server for verification.
 6. **Server Verification**: The resource server performs a joint verification of identity and residency:
     - **Identity**: Verifies the client certificate as part of standard mTLS.
     - **Residency**: Verifies the PoR assertion signature against the WIA public key found in the client's certificate extension.
-    - **Binding and Freshness**: Ensures that the mTLS session key hash, the nonce, and the timestamp match the current active session and are within an acceptable freshness window.
+    - **Binding and Freshness**: Ensures that the TLS Exporter hash, the nonce, and the timestamp match the current active session and are within an acceptable freshness window.
 
 Upon successful verification, the resource server has proof that the client identity (presented via mTLS) is currently resident in the same authorized environment as the verified WIA.
 
@@ -177,6 +182,14 @@ TBD: Discussion on WIA compromise, nonce entropy requirements, and clock skew fo
 This document has no IANA actions at this time.
 
 {backmatter}
+
+<reference anchor="RFC5705" target="https://www.rfc-editor.org/rfc/rfc5705">
+  <front>
+    <title>Keying Material Exporters for Transport Layer Security (TLS)</title>
+    <author initials="E." surname="Rescorla" fullname="Eric Rescorla"/>
+    <date month="March" year="2010"/>
+  </front>
+</reference>
 
 <reference anchor="I-D.ietf-wimse-arch" target="https://datatracker.ietf.org/doc/html/draft-ietf-wimse-arch">
   <front>

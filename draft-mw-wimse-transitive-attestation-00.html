@@ -1432,36 +1432,43 @@ li > p:last-of-type:only-child {
             <li id="section-4.1.1-2.3">
               <p id="section-4.1.1-2.3.1"><strong>Local Attestation Binding</strong>: The client constructs a PoR assertion payload containing:<a href="#section-4.1.1-2.3.1" class="pilcrow">¶</a></p>
 <ul class="compact">
-<li class="compact" id="section-4.1.1-2.3.2.1">A cryptographic hash of the mTLS session key.<a href="#section-4.1.1-2.3.2.1" class="pilcrow">¶</a>
+<li class="compact" id="section-4.1.1-2.3.2.1">A cryptographic hash of the TLS Exporter value [[RFC5705]].<a href="#section-4.1.1-2.3.2.1" class="pilcrow">¶</a>
 </li>
                 <li class="compact" id="section-4.1.1-2.3.2.2">The residency nonce provided by the server.<a href="#section-4.1.1-2.3.2.2" class="pilcrow">¶</a>
 </li>
-                <li class="compact" id="section-4.1.1-2.3.2.3">A timestamp representing the current time of assertion creation.<a href="#section-4.1.1-2.3.2.3" class="pilcrow">¶</a>
-</li>
-              </ul>
-</li>
-            <li id="section-4.1.1-2.4">
-              <strong>Agent Signature</strong>: The client sends this payload to the local WIA (typically via a Unix Domain Socket). The WIA verifies the local peer environment and signs the payload with its private key.<a href="#section-4.1.1-2.4" class="pilcrow">¶</a>
-</li>
-            <li id="section-4.1.1-2.5">
-              <strong>PoR Submission</strong>: The client sends this attested response to the resource server for verification.<a href="#section-4.1.1-2.5" class="pilcrow">¶</a>
-</li>
-            <li id="section-4.1.1-2.6">
-              <p id="section-4.1.1-2.6.1"><strong>Server Verification</strong>: The resource server performs a joint verification of identity and residency:<a href="#section-4.1.1-2.6.1" class="pilcrow">¶</a></p>
-<ul class="compact">
-<li class="compact" id="section-4.1.1-2.6.2.1">
-                  <strong>Identity</strong>: Verifies the client certificate as part of standard mTLS.<a href="#section-4.1.1-2.6.2.1" class="pilcrow">¶</a>
-</li>
-                <li class="compact" id="section-4.1.1-2.6.2.2">
-                  <strong>Residency</strong>: Verifies the PoR assertion signature against the WIA public key found in the client's certificate extension.<a href="#section-4.1.1-2.6.2.2" class="pilcrow">¶</a>
-</li>
-                <li class="compact" id="section-4.1.1-2.6.2.3">
-                  <strong>Binding and Freshness</strong>: Ensures that the mTLS session key hash, the nonce, and the timestamp match the current active session and are within an acceptable freshness window.<a href="#section-4.1.1-2.6.2.3" class="pilcrow">¶</a>
+                <li class="compact" id="section-4.1.1-2.3.2.3">A timestamp representing the current time of assertion creation.
+<br><a href="#section-4.1.1-2.3.2.3" class="pilcrow">¶</a>
 </li>
               </ul>
 </li>
           </ol>
-<p id="section-4.1.1-3">Upon successful verification, the resource server has proof that the client identity (presented via mTLS) is currently resident in the same authorized environment as the verified WIA.<a href="#section-4.1.1-3" class="pilcrow">¶</a></p>
+<blockquote id="section-4.1.1-3">
+            <p id="section-4.1.1-3.1">[!NOTE]
+By binding to the TLS Exporter instead of the application traffic keys, the Proof of Residency remains valid across TLS 1.3 <code>KeyUpdate</code> operations. Standard key rotation refreshes traffic keys but does not change the exporter master secret, thus avoiding unnecessary re-attestation cycles while maintaining strong cryptographic binding to the session.<a href="#section-4.1.1-3.1" class="pilcrow">¶</a></p>
+</blockquote>
+<ol start="4" type="1" class="compact type-1" id="section-4.1.1-4">
+<li id="section-4.1.1-4.1">
+              <strong>Agent Signature</strong>: The client sends this payload to the local WIA (typically via a Unix Domain Socket). The WIA verifies the local peer environment and signs the payload with its private key.<a href="#section-4.1.1-4.1" class="pilcrow">¶</a>
+</li>
+            <li id="section-4.1.1-4.2">
+              <strong>PoR Submission</strong>: The client sends this attested response to the resource server for verification.<a href="#section-4.1.1-4.2" class="pilcrow">¶</a>
+</li>
+            <li id="section-4.1.1-4.3">
+              <p id="section-4.1.1-4.3.1"><strong>Server Verification</strong>: The resource server performs a joint verification of identity and residency:<a href="#section-4.1.1-4.3.1" class="pilcrow">¶</a></p>
+<ul class="compact">
+<li class="compact" id="section-4.1.1-4.3.2.1">
+                  <strong>Identity</strong>: Verifies the client certificate as part of standard mTLS.<a href="#section-4.1.1-4.3.2.1" class="pilcrow">¶</a>
+</li>
+                <li class="compact" id="section-4.1.1-4.3.2.2">
+                  <strong>Residency</strong>: Verifies the PoR assertion signature against the WIA public key found in the client's certificate extension.<a href="#section-4.1.1-4.3.2.2" class="pilcrow">¶</a>
+</li>
+                <li class="compact" id="section-4.1.1-4.3.2.3">
+                  <strong>Binding and Freshness</strong>: Ensures that the TLS Exporter hash, the nonce, and the timestamp match the current active session and are within an acceptable freshness window.<a href="#section-4.1.1-4.3.2.3" class="pilcrow">¶</a>
+</li>
+              </ul>
+</li>
+          </ol>
+<p id="section-4.1.1-5">Upon successful verification, the resource server has proof that the client identity (presented via mTLS) is currently resident in the same authorized environment as the verified WIA.<a href="#section-4.1.1-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>

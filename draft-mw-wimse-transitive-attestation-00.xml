@@ -65,10 +65,17 @@
 <li><t><strong>Local Attestation Binding</strong>: The client constructs a PoR assertion payload containing:</t>
 
 <ul spacing="compact">
-<li>A cryptographic hash of the mTLS session key.</li>
+<li>A cryptographic hash of the TLS Exporter value [[RFC5705]].</li>
 <li>The residency nonce provided by the server.</li>
-<li>A timestamp representing the current time of assertion creation.</li>
+<li>A timestamp representing the current time of assertion creation.
+<br />
+</li>
 </ul></li>
+</ol>
+<blockquote><t>[!NOTE]
+By binding to the TLS Exporter instead of the application traffic keys, the Proof of Residency remains valid across TLS 1.3 <tt>KeyUpdate</tt> operations. Standard key rotation refreshes traffic keys but does not change the exporter master secret, thus avoiding unnecessary re-attestation cycles while maintaining strong cryptographic binding to the session.</t>
+</blockquote>
+<ol spacing="compact" start="4">
 <li><strong>Agent Signature</strong>: The client sends this payload to the local WIA (typically via a Unix Domain Socket). The WIA verifies the local peer environment and signs the payload with its private key.</li>
 <li><strong>PoR Submission</strong>: The client sends this attested response to the resource server for verification.</li>
 <li><t><strong>Server Verification</strong>: The resource server performs a joint verification of identity and residency:</t>
@@ -76,7 +83,7 @@
 <ul spacing="compact">
 <li><strong>Identity</strong>: Verifies the client certificate as part of standard mTLS.</li>
 <li><strong>Residency</strong>: Verifies the PoR assertion signature against the WIA public key found in the client's certificate extension.</li>
-<li><strong>Binding and Freshness</strong>: Ensures that the mTLS session key hash, the nonce, and the timestamp match the current active session and are within an acceptable freshness window.</li>
+<li><strong>Binding and Freshness</strong>: Ensures that the TLS Exporter hash, the nonce, and the timestamp match the current active session and are within an acceptable freshness window.</li>
 </ul></li>
 </ol>
 <t>Upon successful verification, the resource server has proof that the client identity (presented via mTLS) is currently resident in the same authorized environment as the verified WIA.</t>
