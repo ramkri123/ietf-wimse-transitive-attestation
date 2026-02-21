@@ -13,16 +13,25 @@ By introducing **Proof of Residency (PoR)**, this proposal anchors software work
 
 Current workload identity mechanisms (like DPoP) focus on binding tokens to keys. However, if a private key or session token is stolen (via RCE or prompt injection), it can be used by an attacker from an unverified environment. This "portability" is a critical security gap in distributed cloud and sovereign AI workloads.
 
-## The Solution: Proof of Residency (PoR)
+## The Solution: Transitive Attestation for Proof of Residency
 
-"Transitive Attestation" establishes a chain of trust from a hardware root (TPM/Secure Enclave) through a local **Workload Identity Agent (WIA)** to the workload itself.
+"Transitive Attestation" establishes a chain of trust from a hardware root through a local agent (or directly from hardware) to the workload.
 
-### Key Protocols
-- **mTLS-based PoR**: Binds residency verification into the session establishment.
-- **DPoR (Demonstrating Proof of Residency)**: An enhancement to RFC 9449 (DPoP) that binds application-level requests to hardware attestation.
+### The Identity Bridge
+The core of this proposal is the **Identity Bridge**—a mechanism that maps low-level hardware claims into high-level **Application Identities (SVIDs)**. This ensures that Verifiers receive a standardized Proof of Residency (PoR) without needing to understand diverse, vendor-specific silicon measurement schemas.
+
+### Architectural Patterns
+The Transitive Attestation model supports two primary flows:
+1.  **Agent-Mediated Flow**: Traditional in standard environments where a local **Workload Identity Agent (WIA)** (e.g., SPIRE Agent) performs local attestation and translation.
+2.  **Direct Quoting Flow**: Typical in Confidential Computing (CC) TEEs where the workload performs "Direct Quoting" of the hardware state, and the **transitive mapping** to SVIDs is handled by a remote **Verifier/CA** (e.g., SPIRE Server).
+
+### Technical Evidence
+A Proof of Residency assertion (PoR) typically consolidates two layers of evidence:
+- **Platform Attributes**: Processor identity, microcode version (TCB), and security state.
+- **Workload Measurements**: Cryptographic hashes of the code/memory image and custom metadata (e.g., `REPORT_DATA`).
 
 ### Local Binding Mechanism
-In the **Agent-Mediated flow**, the workload connects to the local **Workload Identity Agent (WIA)** (e.g., SPIRE Agent) through a **Unix Domain Socket (UDS)**. This kernel-enforced communication channel provides the initial cryptographic guarantee of local residency, ensuring the requester is co-located with the hardware-rooted agent.
+In the **Agent-Mediated flow**, the workload connects to the local WIA through a **Unix Domain Socket (UDS)**. This kernel-enforced communication channel provides the initial cryptographic guarantee of local residency, ensuring the requester is co-located with the hardware-rooted agent.
 
 ## Chain of Accountability
 
