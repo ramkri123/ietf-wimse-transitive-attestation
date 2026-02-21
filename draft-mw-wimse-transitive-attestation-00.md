@@ -77,7 +77,7 @@ Workload identities are often represented by bearer tokens or keys that, once co
 
 # The Solution: Transitive Attestation for Proof of Residency
 
-"Transitive Attestation" establishes a chain of trust from a hardware root through a local agent to the workload. The WIA provides the workload with a "live" proof that it is currently resident on the verified host.
+"Transitive Attestation" establishes a chain of trust from a hardware root through a local agent to the workload. The WIA provides the workload with a "live" proof that it is currently resident on the verified host. This local peer-to-peer connection is typically enforced through a **Unix Domain Socket (UDS)**, providing a kernel-level guarantee that the workload is co-located with the hardware-rooted agent.
 
 ## mTLS-based Transitive Attestation
 
@@ -93,7 +93,7 @@ The mTLS-based flow integrates residency verification into the session establish
     - A cryptographic hash of the mTLS session key.
     - The residency nonce provided by the server.
     - A timestamp representing the current time of assertion creation.
-4. **Agent Signature**: The client sends this payload to the local WIA. The WIA verifies the local environment and signs the payload with its private key.
+4. **Agent Signature**: The client sends this payload to the local WIA (typically via a Unix Domain Socket). The WIA verifies the local peer environment and signs the payload with its private key.
 5. **PoR Submission**: The client sends this attested response to the resource server for verification.
 6. **Server Verification**: The resource server performs a joint verification of identity and residency:
     - **Identity**: Verifies the client certificate as part of standard mTLS.
@@ -115,7 +115,7 @@ The DPoR flow integrates residency verification into the per-request application
     - The hash of the DPoP public key used for the request (e.g., the `jkt` thumbprint).
     - The residency nonce provided by the server.
     - A timestamp representing the current time of assertion creation.
-3. **Agent Signature**: The client sends this payload to the local WIA. The WIA (acting as an Attester) verifies the local execution context and signs the payload with its private key.
+3. **Agent Signature**: The client sends this payload to the local WIA (typically via a Unix Domain Socket). The WIA (acting as an Attester) verifies the local execution context and signs the payload with its private key.
 4. **DPoR Assertion Submission**: The client includes the resulting signature in a `DPoR` header or as an extension to the `DPoP` JWT.
 5. **Server Verification**: The resource server performs a joint verification of possession and residency:
     - **Possession**: Verifies the DPoP proof as per [[RFC9449]].

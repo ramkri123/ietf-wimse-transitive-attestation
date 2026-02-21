@@ -1409,7 +1409,7 @@ li > p:last-of-type:only-child {
       <h2 id="name-the-solution-transitive-att">
 <a href="#section-4" class="section-number selfRef">4. </a><a href="#name-the-solution-transitive-att" class="section-name selfRef">The Solution: Transitive Attestation for Proof of Residency</a>
       </h2>
-<p id="section-4-1">"Transitive Attestation" establishes a chain of trust from a hardware root through a local agent to the workload. The WIA provides the workload with a "live" proof that it is currently resident on the verified host.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<p id="section-4-1">"Transitive Attestation" establishes a chain of trust from a hardware root through a local agent to the workload. The WIA provides the workload with a "live" proof that it is currently resident on the verified host. This local peer-to-peer connection is typically enforced through a <strong>Unix Domain Socket (UDS)</strong>, providing a kernel-level guarantee that the workload is co-located with the hardware-rooted agent.<a href="#section-4-1" class="pilcrow">¶</a></p>
 <div id="mtls-based-transitive-attestation">
 <section id="section-4.1">
         <h3 id="name-mtls-based-transitive-attes">
@@ -1441,7 +1441,7 @@ li > p:last-of-type:only-child {
               </ul>
 </li>
             <li id="section-4.1.1-2.4">
-              <strong>Agent Signature</strong>: The client sends this payload to the local WIA. The WIA verifies the local environment and signs the payload with its private key.<a href="#section-4.1.1-2.4" class="pilcrow">¶</a>
+              <strong>Agent Signature</strong>: The client sends this payload to the local WIA (typically via a Unix Domain Socket). The WIA verifies the local peer environment and signs the payload with its private key.<a href="#section-4.1.1-2.4" class="pilcrow">¶</a>
 </li>
             <li id="section-4.1.1-2.5">
               <strong>PoR Submission</strong>: The client sends this attested response to the resource server for verification.<a href="#section-4.1.1-2.5" class="pilcrow">¶</a>
@@ -1494,7 +1494,7 @@ li > p:last-of-type:only-child {
               </ul>
 </li>
             <li id="section-4.2.1-2.3">
-              <strong>Agent Signature</strong>: The client sends this payload to the local WIA. The WIA (acting as an Attester) verifies the local execution context and signs the payload with its private key.<a href="#section-4.2.1-2.3" class="pilcrow">¶</a>
+              <strong>Agent Signature</strong>: The client sends this payload to the local WIA (typically via a Unix Domain Socket). The WIA (acting as an Attester) verifies the local execution context and signs the payload with its private key.<a href="#section-4.2.1-2.3" class="pilcrow">¶</a>
 </li>
             <li id="section-4.2.1-2.4">
               <strong>DPoR Assertion Submission</strong>: The client includes the resulting signature in a <code>DPoR</code> header or as an extension to the <code>DPoP</code> JWT.<a href="#section-4.2.1-2.4" class="pilcrow">¶</a>
