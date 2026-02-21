@@ -144,9 +144,16 @@ Additional relationships include:
 
 # Security Considerations
 
-Proof of Residency specifically mitigates the "Stolen Key Portability" threat. An attacker who steals a private key from a workload cannot use it unless they also have access to the local WIA's signing interface, which is protected by local OS permissions and linked to the hardware root.
+Proof of Residency (PoR) specifically mitigates the "Stolen Credential Portability" threat, which encompasses both stolen private keys and stolen bearer/DPoP tokens. 
 
-TBD: Discussion on WIA compromise and nonce entropy.
+An attacker who steals a private key or intercepts an active token from a workload cannot use those credentials from an external environment. Any attempt to use the stolen credential requires a corresponding PoR assertion that is:
+1.  **Hardware-Rooted**: Linked to the local WIA's signing interface and TPM/Secure Enclave.
+2.  **Context-Specific**: Bound to a fresh, server-provided nonce and a current timestamp.
+3.  **Protected**: Access to the WIA's signing capability is restricted by local Operating System permissions and logical isolation.
+
+Consequently, credentials become functionally "sticky" to the verified residence; an attacker cannot generate a valid residency proof without achieving a deep compromise of the hardware-protected identity agent itself.
+
+TBD: Discussion on WIA compromise, nonce entropy requirements, and clock skew for timestamp verification.
 
 # IANA Considerations
 

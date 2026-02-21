@@ -1584,8 +1584,13 @@ li > p:last-of-type:only-child {
       <h2 id="name-security-considerations">
 <a href="#section-6" class="section-number selfRef">6. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
-<p id="section-6-1">Proof of Residency specifically mitigates the "Stolen Key Portability" threat. An attacker who steals a private key from a workload cannot use it unless they also have access to the local WIA's signing interface, which is protected by local OS permissions and linked to the hardware root.<a href="#section-6-1" class="pilcrow">¶</a></p>
-<p id="section-6-2">TBD: Discussion on WIA compromise and nonce entropy.<a href="#section-6-2" class="pilcrow">¶</a></p>
+<p id="section-6-1">Proof of Residency (PoR) specifically mitigates the "Stolen Credential Portability" threat, which encompasses both stolen private keys and stolen bearer/DPoP tokens.<a href="#section-6-1" class="pilcrow">¶</a></p>
+<p id="section-6-2">An attacker who steals a private key or intercepts an active token from a workload cannot use those credentials from an external environment. Any attempt to use the stolen credential requires a corresponding PoR assertion that is:
+1.  <strong>Hardware-Rooted</strong>: Linked to the local WIA's signing interface and TPM/Secure Enclave.
+2.  <strong>Context-Specific</strong>: Bound to a fresh, server-provided nonce and a current timestamp.
+3.  <strong>Protected</strong>: Access to the WIA's signing capability is restricted by local Operating System permissions and logical isolation.<a href="#section-6-2" class="pilcrow">¶</a></p>
+<p id="section-6-3">Consequently, credentials become functionally "sticky" to the verified residence; an attacker cannot generate a valid residency proof without achieving a deep compromise of the hardware-protected identity agent itself.<a href="#section-6-3" class="pilcrow">¶</a></p>
+<p id="section-6-4">TBD: Discussion on WIA compromise, nonce entropy requirements, and clock skew for timestamp verification.<a href="#section-6-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana-considerations">
