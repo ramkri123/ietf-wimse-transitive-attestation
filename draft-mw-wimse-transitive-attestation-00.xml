@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- name="GENERATOR" content="github.com/mmarkdown/mmark Mmark Markdown Processor - mmark.miek.nl" -->
+<rfc version="3" ipr="trust200902" docName="draft-mw-wimse-transitive-attestation-00" submissionType="IETF" category="info" xml:lang="en" xmlns:xi="http://www.w3.org/2001/XInclude" indexInclude="true">
+
+<front>
+<title abbrev="WIMSE-TRANS-ATT">Transitive Attestation for Workload Proof of Residency</title><seriesInfo value="draft-mw-wimse-transitive-attestation-00" status="informational" name="Internet-Draft"></seriesInfo>
+<author initials="R." surname="Krishnan" fullname="Ram Krishnan"><organization>JPMorgan Chase &amp; Co</organization><address><postal><street></street>
+</postal><email>ramkri123@gmail.com</email>
+</address></author><author initials="D." surname="Lopez" fullname="Diego R. Lopez"><organization>Telefonica</organization><address><postal><street></street>
+</postal><email>diego.r.lopez@telefonica.com</email>
+</address></author><author initials="A." surname="Prasad" fullname="A Prasad"><organization>Oracle</organization><address><postal><street></street>
+</postal><email>a.prasad@oracle.com</email>
+</address></author><author initials="S." surname="Addepalli" fullname="Srinivasa Addepalli"><organization>Aryaka</organization><address><postal><street></street>
+</postal><email>srinivasa.addepalli@aryaka.com</email>
+</address></author><date/>
+<area>Security</area>
+<workgroup>WIMSE</workgroup>
+<keyword>attestation</keyword>
+<keyword>wimse</keyword>
+<keyword>transitive</keyword>
+<keyword>workload identity</keyword>
+<keyword>residency</keyword>
+
+<abstract>
+<t>This document proposes a mechanism for Transitive Attestation within the Workload Identity in Multi-Service Environments (WIMSE) framework. It addresses the problem of identity portability and theft (e.g., via prompt injection) by requiring workloads to prove &quot;residency&quot;—a verifiable connection to a local, hardware-rooted Workload Identity Agent (WIA).</t>
+</abstract>
+
+</front>
+
+<middle>
+
+<section anchor="introduction"><name>Introduction</name>
+<t>Current workload identity mechanisms, such as DPoP [[RFC9449]], focus on binding tokens to keys but do not necessarily ensure that the workload using the key is the one originally authorized or that it is executing in a verified context. If a private key is stolen (e.g., via Remote Code Execution or prompt injection on an AI agent/workload), it can often be used from a different, unverified location or environment.</t>
+<t>This proposal introduces &quot;Transitive Attestation&quot; and &quot;Proof of Residency (PoR)&quot;. A workload must obtain a fresh signature or proof from a local Workload Identity Agent (WIA) that has already been RATS-verified [[RFC9334]]. This ensures the identity is hardware-rooted (e.g., via TPM) and sensitive to the physical or logical residence of the workload.</t>
+</section>
+
+<section anchor="terminology"><name>Terminology</name>
+<t>The key words &quot;MUST&quot;, &quot;MUST NOT&quot;, &quot;REQUIRED&quot;, &quot;SHALL&quot;, &quot;SHALL NOT&quot;, &quot;SHOULD&quot;, &quot;SHOULD NOT&quot;, &quot;RECOMMENDED&quot;, &quot;NOT RECOMMENDED&quot;, &quot;MAY&quot;, and &quot;OPTIONAL&quot; in this document are to be interpreted as described in BCP 14 [[RFC2119]] [[RFC8174]] when, and only when, they appear in all capitals, as shown here.</t>
+<t>This document leverages the terminology defined in the RATS Architecture [[RFC9334]] and the WIMSE Architecture [[!I-D.ietf-wimse-arch]].</t>
+
+<dl spacing="compact">
+<dt>Workload Identity Agent (WIA):</dt>
+<dd>A local entity that acts as an <strong>Attester</strong> or <strong>Attestation Intermediate</strong> in the RATS framework. It is responsible for providing Evidence or Attestation Results to a workload.</dd>
+<dt>Proof of Residency (PoR):</dt>
+<dd>A cryptographic proof that binds a workload's current execution session to a specific, verified local environment or host.</dd>
+</dl>
+</section>
+
+<section anchor="the-problem-identity-portability"><name>The Problem: Identity Portability</name>
+<t>Workload identities are often represented by bearer tokens or keys that, once compromised, can be used by an attacker from any environment. This &quot;portability&quot; allows an attacker who achieves RCE on a workload (e.g., in Region A) to use the stolen credentials from an attacking machine (e.g., in Region B). Even binding keys to the workload (DPoP) does not prevent the key itself from being exported if the environment is not sufficiently isolated or hardware-protected.</t>
+</section>
+
+<section anchor="the-solution-transitive-attestation-for-proof-of-residency"><name>The Solution: Transitive Attestation for Proof of Residency</name>
+<t>&quot;Transitive Attestation&quot; establishes a chain of trust from a hardware root through a local agent to the workload. The WIA provides the workload with a &quot;live&quot; proof that it is currently resident on the verified host.</t>
+
+<section anchor="mtls-based-transitive-attestation"><name>mTLS-based Transitive Attestation</name>
+<t>In an mTLS environment, the Proof of Residency (PoR) is bound to the mutually authenticated session and the local execution context via a transitive chain of trust.</t>
+
+<section anchor="mtls-por-protocol-flow"><name>mTLS PoR Protocol Flow</name>
+<t>The mTLS-based flow integrates residency verification into the session establishment and validation phase:</t>
+
+<ol spacing="compact">
+<li><strong>Certificate Extensions</strong>: The client (workload) supplies an X.509 certificate during the mTLS handshake containing a custom extension. This extension includes the public key or SVID details of the local WIA (Attester).</li>
+<li><strong>Post-Handshake Nonce</strong>: After the mTLS handshake is successfully completed, the client requests a residency-specific nonce from the resource server (Verifier/Relying Party) to ensure anti-replay.</li>
+<li><t><strong>Local Attestation Binding</strong>: The client constructs a PoR assertion payload containing:</t>
+
+<ul spacing="compact">
+<li>A cryptographic hash of the mTLS session key.</li>
+<li>The residency nonce provided by the server.</li>
+<li>A timestamp representing the current time of assertion creation.</li>
+</ul></li>
+<li><strong>Agent Signature</strong>: The client sends this payload to the local WIA. The WIA verifies the local environment and signs the payload with its private key.</li>
+<li><strong>PoR Submission</strong>: The client sends this attested response to the resource server for verification.</li>
+<li><t><strong>Server Verification</strong>: The resource server performs a joint verification of identity and residency:</t>
+
+<ul spacing="compact">
+<li><strong>Identity</strong>: Verifies the client certificate as part of standard mTLS.</li>
+<li><strong>Residency</strong>: Verifies the PoR assertion signature against the WIA public key found in the client's certificate extension.</li>
+<li><strong>Binding and Freshness</strong>: Ensures that the mTLS session key hash, the nonce, and the timestamp match the current active session and are within an acceptable freshness window.</li>
+</ul></li>
+</ol>
+<t>Upon successful verification, the resource server has proof that the client identity (presented via mTLS) is currently resident in the same authorized environment as the verified WIA.</t>
+</section>
+</section>
+
+<section anchor="dpor-demonstrating-proof-of-residency"><name>DPoR: Demonstrating Proof of Residency</name>
+<t>&quot;Demonstrating Proof of Residency&quot; (DPoR) is an enhancement to the Demonstrating Proof-of-Possession (DPoP) mechanism defined in [[RFC9449]]. While DPoP ensures <em>possession</em> of a private key held by the client, DPoR ensures the <em>residency</em> of the workload using that key by binding the request to a local, hardware-rooted attestation.</t>
+
+<section anchor="dpor-protocol-flow"><name>DPoR Protocol Flow</name>
+<t>The DPoR flow integrates residency verification into the per-request application-level authorization:</t>
+
+<ol spacing="compact">
+<li><strong>Nonced Request</strong>: The Resource Server SHOULD provide a residency-specific nonce (e.g., via a <tt>DPoR-Nonce</tt> header) to the client to ensure anti-replay of the residency proof.</li>
+<li><t><strong>Local Attestation Binding</strong>: The client constructs a DPoR assertion payload containing:</t>
+
+<ul spacing="compact">
+<li>The hash of the DPoP public key used for the request (e.g., the <tt>jkt</tt> thumbprint).</li>
+<li>The residency nonce provided by the server.</li>
+<li>A timestamp representing the current time of assertion creation.</li>
+</ul></li>
+<li><strong>Agent Signature</strong>: The client sends this payload to the local WIA. The WIA (acting as an Attester) verifies the local execution context and signs the payload with its private key.</li>
+<li><strong>DPoR Assertion Submission</strong>: The client includes the resulting signature in a <tt>DPoR</tt> header or as an extension to the <tt>DPoP</tt> JWT.</li>
+<li><t><strong>Server Verification</strong>: The resource server performs a joint verification of possession and residency:</t>
+
+<ul spacing="compact">
+<li><strong>Possession</strong>: Verifies the DPoP proof as per [[RFC9449]].</li>
+<li><strong>Residency</strong>: Verifies the DPoR assertion signature against the WIA public key.</li>
+<li><strong>Binding and Freshness</strong>: Ensures that the <tt>jkt</tt> (DPoP key thumbprint), the nonce, and the timestamp in the residency proof match the current request and are within an acceptable freshness window.</li>
+</ul></li>
+</ol>
+<t>This binding ensures that a DPoP key cannot be &quot;exported&quot; and used from a different machine, as the resource server would detect the lack of a valid, hardware-rooted residency proof for that specific key from the new environment.</t>
+</section>
+</section>
+</section>
+
+<section anchor="relation-to-other-ietf-work"><name>Relation to Other IETF Work</name>
+<t>This proposal builds upon and complements several ongoing efforts in the WIMSE, RATS, and SPICE working groups, forming what can be viewed as a three-layer &quot;Chain of Accountability&quot; that anchors software workloads to physical hardware and geographic locations:</t>
+<table>
+<thead>
+<tr>
+<th align="left">Layer</th>
+<th align="left">Component</th>
+<th align="left">Core Responsibility</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="left"><strong>The Mechanism</strong></td>
+<td align="left"><strong>RATS</strong></td>
+<td align="left">Consolidates hardware primitives (TPM, PTP, Geo-sensors) into high-confidence results.</td>
+</tr>
+
+<tr>
+<td align="left"><strong>The Policy</strong></td>
+<td align="left"><strong>WIMSE</strong></td>
+<td align="left">(This Draft) Standardizes Transitive Attestation to solve identity portability.</td>
+</tr>
+
+<tr>
+<td align="left"><strong>The Shield</strong></td>
+<td align="left"><strong>SPICE</strong></td>
+<td align="left">Employs Selective Disclosure (SD-CWT) to protect residency/geographic privacy.</td>
+</tr>
+</tbody>
+</table>
+<ol spacing="compact">
+<li><strong>RATS (Remote Attestation Procedures) - The Mechanism</strong>: Provides the hardware-rooted foundation. This layer (leveraging [[RFC9334]]) consolidates primitives like TPM 2.0 (silicon identity), PTP (clock sync/anti-replay), and geo-sensors into High-Confidence Geographic Results.</li>
+<li><strong>WIMSE (Workload Identity in Multi-Service Environments) - The Policy</strong>: Standardizes the Transitive Attestation Profile (this document). It addresses the &quot;identity portability&quot; problem by making SVIDs &quot;sticky&quot; to a specific host's WIA (e.g., SPIRE), ensuring an attacker cannot export a stolen key without also controlling the hardware-rooted agent.</li>
+<li><strong>SPICE (Secure Patterns for Internet Credential Exchange) - The Shield</strong>: Utilizes Selective Disclosure (SD-CWT) to protect sensitive location data. It allows a workload to prove residency within a broad &quot;Sovereign Zone&quot; without revealing precise GPS coordinates, balancing security with privacy.</li>
+</ol>
+<t>Additional relationships include:
+- <strong>DPoP [[RFC9449]]</strong>: This draft proposes DPoR as a &quot;Residency&quot; extension to the &quot;Possession&quot; model of DPoP, addressing the vulnerability where stolen DPoP keys can be used from unverified environments.
+- <strong>Service-to-Service Authentication [[!I-D.ietf-wimse-s2s-protocol]]</strong>: Complements S2S flows by adding residency verification to the authentication phase.</t>
+</section>
+
+<section anchor="security-considerations"><name>Security Considerations</name>
+<t>Proof of Residency specifically mitigates the &quot;Stolen Key Portability&quot; threat. An attacker who steals a private key from a workload cannot use it unless they also have access to the local WIA's signing interface, which is protected by local OS permissions and linked to the hardware root.</t>
+<t>TBD: Discussion on WIA compromise and nonce entropy.</t>
+</section>
+
+<section anchor="iana-considerations"><name>IANA Considerations</name>
+<t>This document has no IANA actions at this time.</t>
+</section>
+
+</middle>
+
+<back>
+
+</back>
+
+</rfc>
