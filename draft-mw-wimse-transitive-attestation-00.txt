@@ -76,9 +76,10 @@ Table of Contents
      4.2.  DPoR: Demonstrating Proof of Residency  . . . . . . . . .   4
        4.2.1.  DPoR Protocol Flow  . . . . . . . . . . . . . . . . .   4
    5.  Relation to Other IETF Work . . . . . . . . . . . . . . . . .   5
-   6.  Security Considerations . . . . . . . . . . . . . . . . . . .   6
-   7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   7
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   7
+   6.  Other Related Efforts . . . . . . . . . . . . . . . . . . . .   7
+   7.  Security Considerations . . . . . . . . . . . . . . . . . . .   7
+   8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   8
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   8
 
 1.  Introduction
 
@@ -104,7 +105,6 @@ Table of Contents
    "OPTIONAL" in this document are to be interpreted as described in BCP
    14 [[RFC2119]] [[RFC8174]] when, and only when, they appear in all
    capitals, as shown here.
-
 
 
 
@@ -317,18 +317,18 @@ Internet-Draft               WIMSE-TRANS-ATT               February 2026
        within a broad "Sovereign Zone" without revealing precise GPS
        coordinates, balancing security with privacy.
 
-   Additional relationships include: - *DPoP [[RFC9449]]*: This draft
-   proposes DPoR as a "Residency" extension to the "Possession" model of
-   DPoP, addressing the vulnerability where stolen DPoP keys can be used
-   from unverified environments. - *Service-to-Service Authentication
-   [[!I-D.ietf-wimse-s2s-protocol]]*: Complements S2S flows by adding
-   residency verification to the authentication phase.
 
-6.  Security Considerations
 
-   Proof of Residency (PoR) specifically mitigates the "Stolen
-   Credential Portability" threat, which encompasses both stolen private
-   keys and stolen bearer/DPoP tokens.
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -337,6 +337,44 @@ Krishnan, et al.         Expires 25 August 2026                 [Page 6]
 
 Internet-Draft               WIMSE-TRANS-ATT               February 2026
 
+
+   Additional relationships include: - *Verifiable Geofencing [[!I-
+   D.lkspa-wimse-verifiable-geo-fence]]*: Provides the framework for
+   geo-fence enforcement.  This draft acts as the technical integrator
+   profile that implements these residency proofs within mTLS and DPoP
+   flows. - *Trustworthy Workload Identity [[!I-D.novak-twi-
+   attestation]]*: Defines the acquisition of credentials based on
+   platform trust.  This draft formalizes how that trust is transitively
+   extended to the application-layer identities used in production. -
+   *DPoP [[RFC9449]]*: This draft proposes DPoR as a "Residency"
+   extension to the "Possession" model of DPoP, addressing the
+   vulnerability where stolen DPoP keys can be used from unverified
+   environments. - *Service-to-Service Authentication [[!I-D.ietf-wimse-
+   s2s-protocol]]*: Complements S2S flows by adding residency
+   verification to the authentication phase.
+
+6.  Other Related Efforts
+
+   Outside of the IETF, this proposal aligns with several industry
+   standards for secure workload execution:
+
+   *  *CNCF SPIFFE/SPIRE*: This draft formalizes the application-layer
+      binding for SPIRE's node-to-workload attestation chain.  It
+      ensures that the short-lived SVIDs issued by SPIRE are
+      cryptographically bound to the hardware-rooted residency assertion
+      provided by the SPIRE Agent (acting as the WIA).
+   *  *Confidential Computing Consortium (CCC)*: Proof of Residency
+      (PoR) provides the cryptographic evidence required for "Sovereign
+      AI" and "Data-in-Use" protection models.  It validates that a
+      workload is executing within a verified Trusted Execution
+      Environment (TEE) and has not been ported to an untrusted or
+      geographically non-compliant host.
+
+7.  Security Considerations
+
+   Proof of Residency (PoR) specifically mitigates the "Stolen
+   Credential Portability" threat, which encompasses both stolen private
+   keys and stolen bearer/DPoP tokens.
 
    An attacker who steals a private key or intercepts an active token
    from a workload cannot use those credentials from an external
@@ -348,6 +386,14 @@ Internet-Draft               WIMSE-TRANS-ATT               February 2026
    capability is restricted by local Operating System permissions and
    logical isolation.
 
+
+
+
+Krishnan, et al.         Expires 25 August 2026                 [Page 7]
+
+Internet-Draft               WIMSE-TRANS-ATT               February 2026
+
+
    Consequently, credentials become functionally "sticky" to the
    verified residence; an attacker cannot generate a valid residency
    proof without achieving a deep compromise of the hardware-protected
@@ -356,7 +402,7 @@ Internet-Draft               WIMSE-TRANS-ATT               February 2026
    TBD: Discussion on WIA compromise, nonce entropy requirements, and
    clock skew for timestamp verification.
 
-7.  IANA Considerations
+8.  IANA Considerations
 
    This document has no IANA actions at this time.
 
@@ -389,4 +435,14 @@ Authors' Addresses
 
 
 
-Krishnan, et al.         Expires 25 August 2026                 [Page 7]
+
+
+
+
+
+
+
+
+
+
+Krishnan, et al.         Expires 25 August 2026                 [Page 8]

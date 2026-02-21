@@ -139,8 +139,17 @@ This proposal builds upon and complements several ongoing efforts in the WIMSE, 
 3.  **SPICE (Secure Patterns for Internet Credential Exchange) - The Shield**: Utilizes Selective Disclosure (SD-CWT) to protect sensitive location data. It allows a workload to prove residency within a broad "Sovereign Zone" without revealing precise GPS coordinates, balancing security with privacy.
 
 Additional relationships include:
+- **Verifiable Geofencing [[!I-D.lkspa-wimse-verifiable-geo-fence]]**: Provides the framework for geo-fence enforcement. This draft acts as the technical integrator profile that implements these residency proofs within mTLS and DPoP flows.
+- **Trustworthy Workload Identity [[!I-D.novak-twi-attestation]]**: Defines the acquisition of credentials based on platform trust. This draft formalizes how that trust is transitively extended to the application-layer identities used in production.
 - **DPoP [[RFC9449]]**: This draft proposes DPoR as a "Residency" extension to the "Possession" model of DPoP, addressing the vulnerability where stolen DPoP keys can be used from unverified environments.
 - **Service-to-Service Authentication [[!I-D.ietf-wimse-s2s-protocol]]**: Complements S2S flows by adding residency verification to the authentication phase.
+
+# Other Related Efforts
+
+Outside of the IETF, this proposal aligns with several industry standards for secure workload execution:
+
+- **CNCF SPIFFE/SPIRE**: This draft formalizes the application-layer binding for SPIRE's node-to-workload attestation chain. It ensures that the short-lived SVIDs issued by SPIRE are cryptographically bound to the hardware-rooted residency assertion provided by the SPIRE Agent (acting as the WIA).
+- **Confidential Computing Consortium (CCC)**: Proof of Residency (PoR) provides the cryptographic evidence required for "Sovereign AI" and "Data-in-Use" protection models. It validates that a workload is executing within a verified Trusted Execution Environment (TEE) and has not been ported to an untrusted or geographically non-compliant host.
 
 # Security Considerations
 

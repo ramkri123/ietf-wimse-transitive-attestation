@@ -150,8 +150,19 @@
 <li><strong>SPICE (Secure Patterns for Internet Credential Exchange) - The Shield</strong>: Utilizes Selective Disclosure (SD-CWT) to protect sensitive location data. It allows a workload to prove residency within a broad &quot;Sovereign Zone&quot; without revealing precise GPS coordinates, balancing security with privacy.</li>
 </ol>
 <t>Additional relationships include:
+- <strong>Verifiable Geofencing [[!I-D.lkspa-wimse-verifiable-geo-fence]]</strong>: Provides the framework for geo-fence enforcement. This draft acts as the technical integrator profile that implements these residency proofs within mTLS and DPoP flows.
+- <strong>Trustworthy Workload Identity [[!I-D.novak-twi-attestation]]</strong>: Defines the acquisition of credentials based on platform trust. This draft formalizes how that trust is transitively extended to the application-layer identities used in production.
 - <strong>DPoP [[RFC9449]]</strong>: This draft proposes DPoR as a &quot;Residency&quot; extension to the &quot;Possession&quot; model of DPoP, addressing the vulnerability where stolen DPoP keys can be used from unverified environments.
 - <strong>Service-to-Service Authentication [[!I-D.ietf-wimse-s2s-protocol]]</strong>: Complements S2S flows by adding residency verification to the authentication phase.</t>
+</section>
+
+<section anchor="other-related-efforts"><name>Other Related Efforts</name>
+<t>Outside of the IETF, this proposal aligns with several industry standards for secure workload execution:</t>
+
+<ul spacing="compact">
+<li><strong>CNCF SPIFFE/SPIRE</strong>: This draft formalizes the application-layer binding for SPIRE's node-to-workload attestation chain. It ensures that the short-lived SVIDs issued by SPIRE are cryptographically bound to the hardware-rooted residency assertion provided by the SPIRE Agent (acting as the WIA).</li>
+<li><strong>Confidential Computing Consortium (CCC)</strong>: Proof of Residency (PoR) provides the cryptographic evidence required for &quot;Sovereign AI&quot; and &quot;Data-in-Use&quot; protection models. It validates that a workload is executing within a verified Trusted Execution Environment (TEE) and has not been ported to an untrusted or geographically non-compliant host.</li>
+</ul>
 </section>
 
 <section anchor="security-considerations"><name>Security Considerations</name>
