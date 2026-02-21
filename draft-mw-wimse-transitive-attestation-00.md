@@ -57,7 +57,7 @@ This document proposes a mechanism for Transitive Attestation within the Workloa
 
 Current workload identity mechanisms, such as DPoP [[RFC9449]], focus on binding tokens to keys but do not necessarily ensure that the workload using the key is the one originally authorized or that it is executing in a verified context. If a private key or an active session token is stolen (e.g., via Remote Code Execution, side-channel attacks, or prompt injection on an AI agent), it can often be used from a different, unverified location or environment.
 
-This proposal introduces "Transitive Attestation" and "Proof of Residency (PoR)". A workload must obtain a fresh signature or proof from a local Workload Identity Agent (WIA) that has already been RATS-verified [[RFC9334]]. This ensures the identity—and the usage of its associated credentials—is hardware-rooted (e.g., via TPM) and sensitive to the physical or logical residence of the workload.
+This proposal introduces "Transitive Attestation" and "Proof of Residency (PoR)", addressing the **North-South** security axis of a workload's relationship with its local hosting environment. A workload must obtain a fresh signature or proof from a local Workload Identity Agent (WIA) that has already been RATS-verified [[RFC9334]]. This ensures the identity—and the usage of its associated credentials—is hardware-rooted (e.g., via TPM) and sensitive to the physical or logical residence of the workload, complementing "East-West" delegation models.
 
 # Terminology
 
@@ -136,12 +136,14 @@ This proposal builds upon and complements several ongoing efforts in the WIMSE, 
 | Layer | Component | Core Responsibility |
 | :--- | :--- | :--- |
 | **The Mechanism** | **RATS** | Consolidates hardware primitives (TPM, PTP, Geo-sensors) into high-confidence results. |
-| **The Policy** | **WIMSE** | (This Draft) Standardizes Transitive Attestation to solve identity portability. |
+| **The Policy** | **WIMSE** | (This Draft) Standardizes Transitive Attestation to solve **North-South** identity portability. |
+| **The Delegation** | **Actor Chain** | Provides **East-West** identity delegation proof [[!I-D.draft-mw-spice-actor-chain]]. |
 | **The Shield** | **SPICE** | Employs Selective Disclosure (SD-CWT) to protect residency/geographic privacy. |
 
 1.  **RATS (Remote Attestation Procedures) - The Mechanism**: Provides the hardware-rooted foundation. This layer (leveraging [[RFC9334]]) consolidates primitives like TPM 2.0 (silicon identity), PTP (clock sync/anti-replay), and geo-sensors into High-Confidence Geographic Results.
-2.  **WIMSE (Workload Identity in Multi-Service Environments) - The Policy**: Standardizes the Transitive Attestation Profile (this document). It addresses the "identity portability" problem by making SVIDs "sticky" to a specific host's WIA (e.g., SPIRE), ensuring an attacker cannot export a stolen key without also controlling the hardware-rooted agent.
-3.  **SPICE (Secure Patterns for Internet Credential Exchange) - The Shield**: Utilizes Selective Disclosure (SD-CWT) to protect sensitive location data. It allows a workload to prove residency within a broad "Sovereign Zone" without revealing precise GPS coordinates, balancing security with privacy.
+2.  **WIMSE (Workload Identity in Multi-Service Environments) - The Policy**: Standardizes the Transitive Attestation Profile (this document). It addresses the **North-South** "identity portability" problem by making SVIDs "sticky" to a specific host's WIA (e.g., SPIRE), ensuring an attacker cannot export a stolen key without also controlling the hardware-rooted agent.
+3.  **Actor Chain - The Delegation**: Complements this draft by addressing the **East-West** axis of agent-to-agent communication [[!I-D.draft-mw-spice-actor-chain]]. While Transitive Attestation proves *where* an actor is running (North-South), the Actor Chain proves *who* called whom across the network (East-West).
+4.  **SPICE (Secure Patterns for Internet Credential Exchange) - The Shield**: Utilizes Selective Disclosure (SD-CWT) to protect sensitive location data. It allows a workload to prove residency within a broad "Sovereign Zone" without revealing precise GPS coordinates, balancing security with privacy.
 
 Additional relationships include:
 - **Verifiable Geofencing [[!I-D.lkspa-wimse-verifiable-geo-fence]]**: Provides the framework for geo-fence enforcement. This draft acts as the technical integrator profile that implements these residency proofs within mTLS and DPoP flows.
