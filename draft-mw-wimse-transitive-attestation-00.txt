@@ -22,14 +22,16 @@ Abstract
    within the Workload Identity in Multi-Service Environments (WIMSE)
    framework.  It addresses the critical problem of *Identity
    Portability*, where software credentials (e.g., bearer tokens or
-   keys) can be misappropriated and used from unauthorized environments.
-   By providing a standardized *Identity Conveyance* mechanism, this
-   profile cryptographically binds software workloads to their local
-   execution environment ("Proof of Residency") through a transitive
-   chain of trust.  This chain consumes high-confidence *Evidence* from
-   the underlying platform (typically via a RATS-based profile such as
-   [[!I-D.lkspa-wimse-verifiable-geo-fence]]) to ensure that an identity
-   is only valid when used from a verified, integral, and geographically
+   keys) can be misappropriated and used from unauthorized
+   environments—a risk amplified by the emergence of autonomous *AI
+   Agents* that may move across jurisdictions.  By providing a
+   standardized *Identity Conveyance* mechanism, this profile
+   cryptographically binds software workloads to their local execution
+   environment ("Proof of Residency") through a transitive chain of
+   trust.  This chain consumes high-confidence *Evidence* from the
+   underlying platform (typically via a RATS-based profile such as [[!I-
+   D.lkspa-wimse-verifiable-geo-fence]]) to ensure that an identity is
+   only valid when used from a verified, integral, and geographically
    compliant host.
 
 Status of This Memo
@@ -48,8 +50,6 @@ Status of This Memo
    material or to cite them other than as "work in progress."
 
    This Internet-Draft will expire on 27 August 2026.
-
-
 
 
 
@@ -99,11 +99,11 @@ Table of Contents
    from any environment.  This *Identity Portability* allows an attacker
    who steals a token in one jurisdiction to use it from another,
    representing a significant *Sovereignty Violation* for workloads
-   legally required to operate within specific boundaries.
-
-
-
-
+   legally required to operate within specific boundaries.  This is
+   particularly critical for *AI Agents*, whose autonomous nature and
+   potential for rapid migration across cloud environments require
+   strict, verifiable adherence to data residency and host integrity
+   policies.
 
 
 
