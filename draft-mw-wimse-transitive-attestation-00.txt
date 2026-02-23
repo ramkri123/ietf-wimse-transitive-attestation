@@ -294,42 +294,42 @@ Internet-Draft               WIMSE-TRANS-ATT               February 2026
 
 5.  Relation to Other IETF Work
 
-   +==============+==============+===================+================+
-   | Layer        | Component    | WG                | Core           |
-   |              |              |                   | Responsibility |
-   +==============+==============+===================+================+
-   | *Layer 1*    | *Transitive  | *WIMSE*           | *Conveyance*:  |
-   |              | Attestation* |                   | Binds identity |
-   |              |              |                   | to the local   |
-   |              |              |                   | agent (Co-     |
-   |              |              |                   | location/      |
-   |              |              |                   | Residency).    |
-   +--------------+--------------+-------------------+----------------+
-   | *Layer 2*    | *Verifiable  | *WIMSE/RATS*      | *Platform*:    |
-   |              | Geofencing*  |                   | Verifies host  |
-   |              |              |                   | integrity and  |
-   |              |              |                   | WIA hardware   |
-   |              |              |                   | residency      |
-   |              |              |                   | (TPM).         |
-   +--------------+--------------+-------------------+----------------+
-   | *Layer 3*    | *Verifiable  | *WIMSE/RATS*      | *Location*:    |
-   |              | Geofencing*  |                   | Verifies       |
-   |              |              |                   | physical       |
-   |              |              |                   | geography      |
-   |              |              |                   | (GNSS/ZKP).    |
-   +--------------+--------------+-------------------+----------------+
-   | *Delegation* | *Actor       | Provides *East-   |                |
-   |              | Chain*       | West* identity    |                |
-   |              |              | delegation proof  |                |
-   |              |              | [[!I-D.draft-mw-  |                |
-   |              |              | spice-actor-      |                |
-   |              |              | chain]].          |                |
-   +--------------+--------------+-------------------+----------------+
-   | *Shield*     | *SPICE*      | Employs Selective |                |
-   |              |              | Disclosure (SD-   |                |
-   |              |              | CWT) to protect   |                |
-   |              |              | residency/        |                |
-   |              |              | geographic        |                |
+    +==============+==============+=========+========================+
+    | Layer        | Component    | WG      | Core Responsibility    |
+    +==============+==============+=========+========================+
+    | *Layer 1*    | *Transitive  | *WIMSE* | *Conveyance*: Binds    |
+    |              | Attestation* |         | identity to the local  |
+    |              |              |         | agent (Co-location/    |
+    |              |              |         | Residency).            |
+    +--------------+--------------+---------+------------------------+
+    | *Layer 2*    | *Verifiable  | *WIMSE/ | *Platform*: Verifies   |
+    |              | Geofencing*  | RATS*   | host integrity and WIA |
+    |              |              |         | hardware residency     |
+    |              |              |         | (TPM).                 |
+    +--------------+--------------+---------+------------------------+
+    | *Layer 3*    | *Verifiable  | *WIMSE/ | *Location*: Verifies   |
+    |              | Geofencing*  | RATS*   | physical geography     |
+    |              |              |         | (GNSS/ZKP).            |
+    +--------------+--------------+---------+------------------------+
+    | *Delegation* | *Actor       | *SPICE* | Provides *East-West*   |
+    |              | Chain*       |         | identity delegation    |
+    |              |              |         | proof [[!I-D.draft-mw- |
+    |              |              |         | spice-actor-chain]].   |
+    +--------------+--------------+---------+------------------------+
+    | *Shield*     | *SPICE*      | *SPICE* | Employs Selective      |
+    |              |              |         | Disclosure (SD-CWT) to |
+    |              |              |         | protect residency/     |
+    |              |              |         | geographic privacy.    |
+    +--------------+--------------+---------+------------------------+
+
+                                 Table 1
+
+
+
+
+
+
+
 
 
 
@@ -337,11 +337,6 @@ Krishnan, et al.         Expires 27 August 2026                 [Page 6]
 
 Internet-Draft               WIMSE-TRANS-ATT               February 2026
 
-
-   |              |              | privacy.          |                |
-   +--------------+--------------+-------------------+----------------+
-
-                                 Table 1
 
    1.  *Transitive Attestation (WIMSE) - Layer 1 (Conveyance)*: This
        document act as the technical integrator profile.  It
@@ -386,6 +381,11 @@ Internet-Draft               WIMSE-TRANS-ATT               February 2026
    Outside of the IETF, this proposal aligns with several industry
    standards for secure workload execution:
 
+   *  *CNCF SPIFFE/SPIRE*: This draft formalizes the application-layer
+      binding for SPIRE's node-to-workload attestation chain.  It
+      ensures that the short-lived SVIDs issued by SPIRE are
+      cryptographically bound to the hardware-rooted residency assertion
+      provided by the SPIRE Agent (acting as the WIA).
 
 
 
@@ -394,11 +394,6 @@ Krishnan, et al.         Expires 27 August 2026                 [Page 7]
 Internet-Draft               WIMSE-TRANS-ATT               February 2026
 
 
-   *  *CNCF SPIFFE/SPIRE*: This draft formalizes the application-layer
-      binding for SPIRE's node-to-workload attestation chain.  It
-      ensures that the short-lived SVIDs issued by SPIRE are
-      cryptographically bound to the hardware-rooted residency assertion
-      provided by the SPIRE Agent (acting as the WIA).
    *  *Confidential Computing Consortium (CCC)*: Proof of Residency
       (PoR) provides the cryptographic evidence required for "Sovereign
       AI" and "Data-in-Use" protection models.  In Confidential
@@ -443,6 +438,11 @@ Internet-Draft               WIMSE-TRANS-ATT               February 2026
    environment.  Any attempt to use the stolen credential requires a
    corresponding PoR assertion that is:
 
+   1.  *Locally Attested*: Linked to the local WIA's signing interface,
+       typically protected by OS permissions or hardware roots.
+   2.  *Context-Specific*: Bound to a fresh, server-provided nonce and a
+       current timestamp.
+
 
 
 Krishnan, et al.         Expires 27 August 2026                 [Page 8]
@@ -450,10 +450,6 @@ Krishnan, et al.         Expires 27 August 2026                 [Page 8]
 Internet-Draft               WIMSE-TRANS-ATT               February 2026
 
 
-   1.  *Locally Attested*: Linked to the local WIA's signing interface,
-       typically protected by OS permissions or hardware roots.
-   2.  *Context-Specific*: Bound to a fresh, server-provided nonce and a
-       current timestamp.
    3.  *Protected*: Access to the WIA's signing capability is restricted
        by local Operating System permissions and logical isolation.
 
@@ -491,6 +487,10 @@ Authors' Addresses
    Srinivasa Addepalli
    Aryaka
    Email: srinivasa.addepalli@aryaka.com
+
+
+
+
 
 
 

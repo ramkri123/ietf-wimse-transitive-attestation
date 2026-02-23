@@ -159,15 +159,15 @@ By binding to the TLS Exporter instead of the application traffic keys, the Proo
 <tr>
 <td align="left"><strong>Delegation</strong></td>
 <td align="left"><strong>Actor Chain</strong></td>
+<td align="left"><strong>SPICE</strong></td>
 <td align="left">Provides <strong>East-West</strong> identity delegation proof [[!I-D.draft-mw-spice-actor-chain]].</td>
-<td align="left"></td>
 </tr>
 
 <tr>
 <td align="left"><strong>Shield</strong></td>
 <td align="left"><strong>SPICE</strong></td>
+<td align="left"><strong>SPICE</strong></td>
 <td align="left">Employs Selective Disclosure (SD-CWT) to protect residency/geographic privacy.</td>
-<td align="left"></td>
 </tr>
 </tbody>
 </table>

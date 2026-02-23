@@ -139,8 +139,8 @@ This binding ensures that a DPoP key cannot be "exported" and used from a differ
 | **Layer 1** | **Transitive Attestation** | **WIMSE** | **Conveyance**: Binds identity to the local agent (Co-location/Residency). |
 | **Layer 2** | **Verifiable Geofencing** | **WIMSE/RATS** | **Platform**: Verifies host integrity and WIA hardware residency (TPM). |
 | **Layer 3** | **Verifiable Geofencing** | **WIMSE/RATS** | **Location**: Verifies physical geography (GNSS/ZKP). |
-| **Delegation** | **Actor Chain** | Provides **East-West** identity delegation proof [[!I-D.draft-mw-spice-actor-chain]]. |
-| **Shield** | **SPICE** | Employs Selective Disclosure (SD-CWT) to protect residency/geographic privacy. |
+| **Delegation** | **Actor Chain** | **SPICE** | Provides **East-West** identity delegation proof [[!I-D.draft-mw-spice-actor-chain]]. |
+| **Shield** | **SPICE** | **SPICE** | Employs Selective Disclosure (SD-CWT) to protect residency/geographic privacy. |
 
 1.  **Transitive Attestation (WIMSE) - Layer 1 (Conveyance)**: This document act as the technical integrator profile. It standardizes how local context results are transitively extended to workloads. It addresses the **North-South** "identity portability" problem by making SVIDs "sticky" to a specific host's WIA (e.g., SPIRE), ensuring an attacker cannot easily export a stolen key without also controlling the agent interface.
 2.  **Verifiable Geofencing (WIMSE/RATS) - Layer 2 & 3 (Evidence)**: Defined in [[!I-D.lkspa-wimse-verifiable-geo-fence]]. This layer provides the hardware-rooted foundation (TPM, Silicon Root of Trust, GNSS) and the out-of-band monitoring required to verify the WIA itself. It generates the high-assurance evidence that Layer 1 consumes.
