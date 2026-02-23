@@ -22,7 +22,7 @@
 <keyword>residency</keyword>
 
 <abstract>
-<t>This document proposes a mechanism for Transitive Attestation within the Workload Identity in Multi-Service Environments (WIMSE) framework. It addresses the problem of identity portability and the theft of credentials (such as private keys and bearer/DPoP tokens) by requiring workloads to prove &quot;residency&quot;—a verifiable connection to a local, hardware-rooted Workload Identity Agent (WIA).</t>
+<t>This document proposes a mechanism for Transitive Attestation within the Workload Identity in Multi-Service Environments (WIMSE) framework. It addresses the problem of identity portability and the theft of credentials by requiring workloads to prove a verifiable connection to a local Workload Identity Agent (WIA). This mechanism supports a spectrum of assurance levels, from software-based <strong>Co-location Verification</strong> using local operating system isolation to high-assurance <strong>Residency Verification</strong> anchored in a hardware root of trust.</t>
 </abstract>
 
 </front>
@@ -30,8 +30,14 @@
 <middle>
 
 <section anchor="introduction"><name>Introduction</name>
-<t>This proposal introduces &quot;Transitive Attestation&quot; and &quot;Proof of Residency (PoR)&quot;, addressing a critical technical gap in the high-level <strong>WIMSE Architecture</strong> [[!I-D.ietf-wimse-arch]] regarding how platform-level trust is transitively extended to software workloads. By addressing the <strong>North-South</strong> security axis of a workload's relationship with its local hosting environment, it ensures that the Workload Identity Agent (WIA)—a central component in the WIMSE model—is empowered to issue identities that are cryptographically bound to a verified execution context.</t>
-<t>A workload must obtain a fresh signature or proof from a local WIA that has already been RATS-verified [[RFC9334]]. This ensures the identity—and the usage of its associated credentials—is hardware-rooted (e.g., via TPM) and sensitive to the physical or logical residence of the workload, complementing the &quot;East-West&quot; delegation models.</t>
+<t>This proposal introduces &quot;Transitive Attestation&quot;, addressing a critical technical gap in the high-level <strong>WIMSE Architecture</strong> [[!I-D.ietf-wimse-arch]] regarding how platform-level trust is transitively extended to software workloads. By addressing the <strong>North-South</strong> security axis of a workload's relationship with its local hosting environment, it ensures that the Workload Identity Agent (WIA)—a central component in the WIMSE model—is empowered to issue identities that are cryptographically bound to a verified execution context.</t>
+<t>The mechanism establishes a &quot;Transitive Chain&quot; that can provide two distinct levels of assurance according to the verification spectrum:</t>
+
+<ul spacing="compact">
+<li><strong>Co-location Verification</strong>: A logical binding that ensures the workload and its identity agent are currently co-located on the same host, typically enforced via operating system isolation and local communication channels (e.g., Unix Domain Sockets).</li>
+<li><strong>Residency Verification (High Assurance)</strong>: A high-assurance binding where the WIA itself is rooted in hardware (e.g., TPM/TEE), as specified in <strong>Verifiable Geofencing</strong> [[!I-D.lkspa-wimse-verifiable-geo-fence]]. <strong>Hardware-rooted WIAs provide a significantly higher level of trust</strong> as they anchor the identity to a unique, immutable silicon identity, preventing agent cloning or environment spoofing.</li>
+</ul>
+<t>A workload obtains a fresh signature or proof from a local WIA. This ensures the identity—and the usage of its associated credentials—is sensitive to the physical or logical residence of the workload, complementing the &quot;East-West&quot; delegation models.</t>
 </section>
 
 <section anchor="terminology"><name>Terminology</name>
@@ -41,7 +47,7 @@
 <dl spacing="compact">
 <dt>Workload Identity Agent (WIA):</dt>
 <dd>A local entity that acts as an <strong>Attester</strong> or <strong>Attestation Intermediate</strong> in the RATS framework. It is responsible for providing Evidence or Attestation Results to a workload.</dd>
-<dt>Proof of Residency (PoR):</dt>
+<dt>Proof of Residency (PoR) / Co-location:</dt>
 <dd>A cryptographic proof that binds a workload's current execution session to a specific, verified local environment or host.</dd>
 </dl>
 </section>
@@ -87,11 +93,8 @@ By binding to the TLS Exporter instead of the application traffic keys, the Proo
 </ul></li>
 </ol>
 <t>Upon successful verification, the resource server has proof that the client identity (presented via mTLS) is currently resident in the same authorized environment as the verified WIA.</t>
+<t>&quot;Demonstrating Proof of Residency&quot; (DPoR) is an enhancement to the Demonstrating Proof-of-Possession (DPoP) mechanism defined in [[RFC9449]]. While DPoP ensures <em>possession</em> of a private key held by the client, DPoR ensures the physical or logical <em>residency</em> of the workload using that key by binding the request to a local attestation.</t>
 </section>
-</section>
-
-<section anchor="dpor-demonstrating-proof-of-residency"><name>DPoR: Demonstrating Proof of Residency</name>
-<t>&quot;Demonstrating Proof of Residency&quot; (DPoR) is an enhancement to the Demonstrating Proof-of-Possession (DPoP) mechanism defined in [[RFC9449]]. While DPoP ensures <em>possession</em> of a private key held by the client, DPoR ensures the <em>residency</em> of the workload using that key by binding the request to a local, hardware-rooted attestation.</t>
 
 <section anchor="dpor-protocol-flow"><name>DPoR Protocol Flow</name>
 <t>The DPoR flow integrates residency verification into the per-request application-level authorization:</t>
@@ -126,6 +129,7 @@ By binding to the TLS Exporter instead of the application traffic keys, the Proo
 <tr>
 <th align="left">Layer</th>
 <th align="left">Component</th>
+<th align="left">WG</th>
 <th align="left">Core Responsibility</th>
 </tr>
 </thead>
@@ -134,36 +138,41 @@ By binding to the TLS Exporter instead of the application traffic keys, the Proo
 <tr>
 <td align="left"><strong>Layer 1</strong></td>
 <td align="left"><strong>Transitive Attestation</strong></td>
-<td align="left">(This Draft) <strong>Conveyance</strong>: Binds workload identity (SVID) to the attested agent (PoR).</td>
+<td align="left"><strong>WIMSE</strong></td>
+<td align="left"><strong>Conveyance</strong>: Binds identity to the local agent (Co-location/Residency).</td>
 </tr>
 
 <tr>
 <td align="left"><strong>Layer 2</strong></td>
 <td align="left"><strong>Verifiable Geofencing</strong></td>
-<td align="left"><strong>Platform</strong>: Verifies host integrity, firmware, and WIA residency (TPM).</td>
+<td align="left"><strong>WIMSE/RATS</strong></td>
+<td align="left"><strong>Platform</strong>: Verifies host integrity and WIA hardware residency (TPM).</td>
 </tr>
 
 <tr>
 <td align="left"><strong>Layer 3</strong></td>
 <td align="left"><strong>Verifiable Geofencing</strong></td>
-<td align="left"><strong>Location</strong>: Verifies physical geography and geofence compliance (GNSS/ZKP).</td>
+<td align="left"><strong>WIMSE/RATS</strong></td>
+<td align="left"><strong>Location</strong>: Verifies physical geography (GNSS/ZKP).</td>
 </tr>
 
 <tr>
 <td align="left"><strong>Delegation</strong></td>
 <td align="left"><strong>Actor Chain</strong></td>
 <td align="left">Provides <strong>East-West</strong> identity delegation proof [[!I-D.draft-mw-spice-actor-chain]].</td>
+<td align="left"></td>
 </tr>
 
 <tr>
 <td align="left"><strong>Shield</strong></td>
 <td align="left"><strong>SPICE</strong></td>
 <td align="left">Employs Selective Disclosure (SD-CWT) to protect residency/geographic privacy.</td>
+<td align="left"></td>
 </tr>
 </tbody>
 </table>
 <ol spacing="compact">
-<li><strong>Transitive Attestation (WIMSE) - Layer 1 (Conveyance)</strong>: This document act as the technical integrator profile. It standardizes how hardware-rooted results are transitively extended to workloads. It addresses the <strong>North-South</strong> &quot;identity portability&quot; problem by making SVIDs &quot;sticky&quot; to a specific host's WIA (e.g., SPIRE), ensuring an attacker cannot export a stolen key without also controlling the hardware-rooted agent.</li>
+<li><strong>Transitive Attestation (WIMSE) - Layer 1 (Conveyance)</strong>: This document act as the technical integrator profile. It standardizes how local context results are transitively extended to workloads. It addresses the <strong>North-South</strong> &quot;identity portability&quot; problem by making SVIDs &quot;sticky&quot; to a specific host's WIA (e.g., SPIRE), ensuring an attacker cannot easily export a stolen key without also controlling the agent interface.</li>
 <li><strong>Verifiable Geofencing (WIMSE/RATS) - Layer 2 &amp; 3 (Evidence)</strong>: Defined in [[!I-D.lkspa-wimse-verifiable-geo-fence]]. This layer provides the hardware-rooted foundation (TPM, Silicon Root of Trust, GNSS) and the out-of-band monitoring required to verify the WIA itself. It generates the high-assurance evidence that Layer 1 consumes.</li>
 <li><strong>Actor Chain - The Delegation</strong>: Complements this draft by addressing the <strong>East-West</strong> axis of agent-to-agent communication [[!I-D.draft-mw-spice-actor-chain]]. While Transitive Attestation proves <em>where</em> an actor is running (North-South), the Actor Chain proves <em>who</em> called whom across the network (East-West).</li>
 <li><strong>SPICE (Secure Patterns for Internet Credential Exchange) - The Shield</strong>: Utilizes Selective Disclosure (SD-CWT) to protect sensitive location data. It allows a workload to prove residency within a broad &quot;Sovereign Zone&quot; without revealing precise GPS coordinates, balancing security with privacy.</li>
@@ -195,12 +204,15 @@ By binding to the TLS Exporter instead of the application traffic keys, the Proo
 </section>
 
 <section anchor="security-considerations"><name>Security Considerations</name>
-<t>Proof of Residency (PoR) specifically mitigates the &quot;Stolen Credential Portability&quot; threat, which encompasses both stolen private keys and stolen bearer/DPoP tokens.</t>
-<t>An attacker who steals a private key or intercepts an active token from a workload cannot use those credentials from an external environment. Any attempt to use the stolen credential requires a corresponding PoR assertion that is:
-1.  <strong>Hardware-Rooted</strong>: Linked to the local WIA's signing interface and TPM/Secure Enclave.
-2.  <strong>Context-Specific</strong>: Bound to a fresh, server-provided nonce and a current timestamp.
-3.  <strong>Protected</strong>: Access to the WIA's signing capability is restricted by local Operating System permissions and logical isolation.</t>
-<t>Consequently, credentials become functionally &quot;sticky&quot; to the verified residence; an attacker cannot generate a valid residency proof without achieving a deep compromise of the hardware-protected identity agent itself.</t>
+<t>Proof of Residency or Co-location specifically mitigates the &quot;Stolen Credential Portability&quot; threat, which encompasses both stolen private keys and stolen bearer/DPoP tokens.</t>
+<t>An attacker who steals a private key or intercepts an active token from a workload cannot use those credentials from an external environment. Any attempt to use the stolen credential requires a corresponding PoR assertion that is:</t>
+
+<ol spacing="compact">
+<li><strong>Locally Attested</strong>: Linked to the local WIA's signing interface, typically protected by OS permissions or hardware roots.</li>
+<li><strong>Context-Specific</strong>: Bound to a fresh, server-provided nonce and a current timestamp.</li>
+<li><strong>Protected</strong>: Access to the WIA's signing capability is restricted by local Operating System permissions and logical isolation.</li>
+</ol>
+<t>Consequently, credentials become functionally &quot;sticky&quot; to the verified residence; an attacker cannot generate a valid proof without achieving a compromise of the identity agent itself. While a software-based agent provides strong logical isolation, a hardware-rooted agent (see [[!I-D.lkspa-wimse-verifiable-geo-fence]]) provides the highest level of protection against agent cloning and export.</t>
 <t>TBD: Discussion on WIA compromise, nonce entropy requirements, and clock skew for timestamp verification.</t>
 </section>
 
