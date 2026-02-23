@@ -13,17 +13,17 @@ Expires: 27 August 2026                                           Oracle
                                                         23 February 2026
 
 
-        Transitive Attestation for Sovereign AI: A WIMSE Profile
+    Transitive Attestation for Sovereign Workloads: A WIMSE Profile
                 draft-mw-wimse-transitive-attestation-00
 
 Abstract
 
    This document defines a *WIMSE Profile* for Transitive Attestation
    within the Workload Identity in Multi-Service Environments (WIMSE)
-   framework, specifically tailored for *Sovereign AI* environments.  It
-   provides the *Identity Conveyance* mechanism that consumes high-
-   confidence *Evidence* (typically generated via a RATS-based profile
-   such as [[!I-D.lkspa-wimse-verifiable-geo-fence]]) to
+   framework, specifically tailored for *Sovereign Workload*
+   environments.  It provides the *Identity Conveyance* mechanism that
+   consumes high-confidence *Evidence* (typically generated via a RATS-
+   based profile such as [[!I-D.lkspa-wimse-verifiable-geo-fence]]) to
    cryptographically bind software workloads to their local execution
    environment.
 
@@ -380,8 +380,8 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
       cryptographically bound to the hardware-rooted residency assertion
       provided by the SPIRE Agent (acting as the WIA).
    *  *Confidential Computing Consortium (CCC)*: Proof of Residency
-      (PoR) provides the cryptographic evidence required for "Sovereign
-      AI" and "Data-in-Use" protection models.  In Confidential
+      (PoR) provides the cryptographic evidence required for "*Sovereign
+      Workloads*" and "Data-in-Use" protection models.  In Confidential
       Computing (CC) environments, the hardware itself can generate
       direct, cryptographically signed quotes (e.g., using AMD SEV-SNP
       VCEK/VLEK keys).  These quotes typically include two distinct

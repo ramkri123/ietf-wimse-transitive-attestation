@@ -3,7 +3,7 @@
 <rfc version="3" ipr="trust200902" docName="draft-mw-wimse-transitive-attestation-00" submissionType="IETF" category="info" xml:lang="en" xmlns:xi="http://www.w3.org/2001/XInclude" indexInclude="true">
 
 <front>
-<title abbrev="WIMSE-TRANS-POR">Transitive Attestation for Sovereign AI: A WIMSE Profile</title><seriesInfo value="draft-mw-wimse-transitive-attestation-00" status="informational" name="Internet-Draft"></seriesInfo>
+<title abbrev="WIMSE-TRANS-POR">Transitive Attestation for Sovereign Workloads: A WIMSE Profile</title><seriesInfo value="draft-mw-wimse-transitive-attestation-00" status="informational" name="Internet-Draft"></seriesInfo>
 <author initials="R." surname="Krishnan" fullname="Ram Krishnan"><organization>JPMorgan Chase &amp; Co</organization><address><postal><street></street>
 </postal><email>ramkri123@gmail.com</email>
 </address></author><author initials="A." surname="Prasad" fullname="A Prasad"><organization>Oracle</organization><address><postal><street></street>
@@ -22,7 +22,7 @@
 <keyword>residency</keyword>
 
 <abstract>
-<t>This document defines a <strong>WIMSE Profile</strong> for Transitive Attestation within the Workload Identity in Multi-Service Environments (WIMSE) framework, specifically tailored for <strong>Sovereign AI</strong> environments. It provides the <strong>Identity Conveyance</strong> mechanism that consumes high-confidence <strong>Evidence</strong> (typically generated via a RATS-based profile such as [[!I-D.lkspa-wimse-verifiable-geo-fence]]) to cryptographically bind software workloads to their local execution environment.</t>
+<t>This document defines a <strong>WIMSE Profile</strong> for Transitive Attestation within the Workload Identity in Multi-Service Environments (WIMSE) framework, specifically tailored for <strong>Sovereign Workload</strong> environments. It provides the <strong>Identity Conveyance</strong> mechanism that consumes high-confidence <strong>Evidence</strong> (typically generated via a RATS-based profile such as [[!I-D.lkspa-wimse-verifiable-geo-fence]]) to cryptographically bind software workloads to their local execution environment.</t>
 </abstract>
 
 </front>
@@ -190,7 +190,7 @@ By binding to the TLS Exporter instead of the application traffic keys, the Proo
 
 <ul spacing="compact">
 <li><strong>CNCF SPIFFE/SPIRE</strong>: This draft formalizes the application-layer binding for SPIRE's node-to-workload attestation chain. It ensures that the short-lived SVIDs issued by SPIRE are cryptographically bound to the hardware-rooted residency assertion provided by the SPIRE Agent (acting as the WIA).</li>
-<li><t><strong>Confidential Computing Consortium (CCC)</strong>: Proof of Residency (PoR) provides the cryptographic evidence required for &quot;Sovereign AI&quot; and &quot;Data-in-Use&quot; protection models. In Confidential Computing (CC) environments, the hardware itself can generate direct, cryptographically signed quotes (e.g., using AMD SEV-SNP VCEK/VLEK keys). These quotes typically include two distinct layers of evidence:</t>
+<li><t><strong>Confidential Computing Consortium (CCC)</strong>: Proof of Residency (PoR) provides the cryptographic evidence required for &quot;<strong>Sovereign Workloads</strong>&quot; and &quot;Data-in-Use&quot; protection models. In Confidential Computing (CC) environments, the hardware itself can generate direct, cryptographically signed quotes (e.g., using AMD SEV-SNP VCEK/VLEK keys). These quotes typically include two distinct layers of evidence:</t>
 
 <ol spacing="compact">
 <li><strong>Platform Attributes</strong>: Measurements of the processor's identity, microcode version (TCB), and hardware security state.</li>

@@ -1,5 +1,5 @@
 %%%
-title = "Transitive Attestation for Sovereign AI: A WIMSE Profile"
+title = "Transitive Attestation for Sovereign Workloads: A WIMSE Profile"
 abbrev = "WIMSE-TRANS-POR"
 category = "info"
 docName = "draft-mw-wimse-transitive-attestation-00"
@@ -50,7 +50,7 @@ organization = "Aryaka"
 
 .# Abstract
 
-This document defines a **WIMSE Profile** for Transitive Attestation within the Workload Identity in Multi-Service Environments (WIMSE) framework, specifically tailored for **Sovereign AI** environments. It provides the **Identity Conveyance** mechanism that consumes high-confidence **Evidence** (typically generated via a RATS-based profile such as [[!I-D.lkspa-wimse-verifiable-geo-fence]]) to cryptographically bind software workloads to their local execution environment.
+This document defines a **WIMSE Profile** for Transitive Attestation within the Workload Identity in Multi-Service Environments (WIMSE) framework, specifically tailored for **Sovereign Workload** environments. It provides the **Identity Conveyance** mechanism that consumes high-confidence **Evidence** (typically generated via a RATS-based profile such as [[!I-D.lkspa-wimse-verifiable-geo-fence]]) to cryptographically bind software workloads to their local execution environment.
 
 {mainmatter}
 
@@ -158,7 +158,7 @@ Additional relationships include:
 Outside of the IETF, this proposal aligns with several industry standards for secure workload execution:
 
 - **CNCF SPIFFE/SPIRE**: This draft formalizes the application-layer binding for SPIRE's node-to-workload attestation chain. It ensures that the short-lived SVIDs issued by SPIRE are cryptographically bound to the hardware-rooted residency assertion provided by the SPIRE Agent (acting as the WIA).
-- **Confidential Computing Consortium (CCC)**: Proof of Residency (PoR) provides the cryptographic evidence required for "Sovereign AI" and "Data-in-Use" protection models. In Confidential Computing (CC) environments, the hardware itself can generate direct, cryptographically signed quotes (e.g., using AMD SEV-SNP VCEK/VLEK keys). These quotes typically include two distinct layers of evidence:
+- **Confidential Computing Consortium (CCC)**: Proof of Residency (PoR) provides the cryptographic evidence required for "**Sovereign Workloads**" and "Data-in-Use" protection models. In Confidential Computing (CC) environments, the hardware itself can generate direct, cryptographically signed quotes (e.g., using AMD SEV-SNP VCEK/VLEK keys). These quotes typically include two distinct layers of evidence:
     1.  **Platform Attributes**: Measurements of the processor's identity, microcode version (TCB), and hardware security state.
     2.  **Workload Measurements**: Measurements of the workload's code/memory image and custom metadata (e.g., via the `REPORT_DATA` field).
 
@@ -214,7 +214,7 @@ This document has no IANA actions at this time.
 
 <reference anchor="I-D.lkspa-wimse-verifiable-geo-fence" target="https://datatracker.ietf.org/doc/html/draft-lkspa-wimse-verifiable-geo-fence">
   <front>
-    <title>Zero-Trust Sovereign AI: Verifiable Geofencing &amp; Residency Proofs for Cybersecure Workloads</title>
+    <title>Verifiable Geofencing and Residency Proofs for Sovereign Workloads: A RATS Profile</title>
     <author initials="D." surname="Lopez" fullname="Diego Lopez"/>
     <date month="February" day="11" year="2025"/>
   </front>
