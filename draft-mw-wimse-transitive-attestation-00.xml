@@ -50,10 +50,8 @@
 <dt>Proof of Residency (PoR) / Co-location:</dt>
 <dd>A cryptographic proof that binds a workload's current execution session to a specific, verified local environment or host.</dd>
 </dl>
-</section>
-
-<section anchor="the-problem-identity-and-token-portability"><name>The Problem: Identity and Token Portability</name>
-<t>Workload identities are often represented by bearer tokens or keys that, once compromised, can be used by an attacker from any environment. This &quot;portability&quot; allows an attacker who achieves RCE on a workload (e.g., in Region A) to use the stolen keys or intercepted tokens from an attacking machine (e.g., in Region B). Even binding keys to the workload (DPoP) does not prevent the key itself from being exported if the environment is not sufficiently isolated, nor does it prevent a validly generated DPoP token from being replayed from a different VPC if the resource server does not enforce residency.</t>
+<t>Workload identities are often represented by bearer tokens or keys that, once compromised, can be used by an attacker from any environment. This &quot;portability&quot; allows an attacker who achieves RCE on a workload (e.g., in Region A) to use the stolen keys or intercepted tokens from an attacking machine (e.g., in Region B).</t>
+<t>In the context of <strong>Sovereign Workloads</strong>, this portability is more than a technical vulnerability; it is a <strong>Sovereignty Violation</strong>. If a workload is legally or logically required to operate within a specific jurisdiction, any identity that can be successfully verified from outside that jurisdiction represents a failure of the sovereign boundary. Relying Parties currently lack a standardized way to ensure that a presented identity is being used from the same verified host that was originally authorized.</t>
 </section>
 
 <section anchor="the-solution-transitive-attestation-for-proof-of-residency"><name>The Solution: Transitive Attestation for Proof of Residency</name>

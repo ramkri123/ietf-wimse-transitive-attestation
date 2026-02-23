@@ -77,9 +77,9 @@ Workload Identity Agent (WIA):
 Proof of Residency (PoR) / Co-location:
 : A cryptographic proof that binds a workload's current execution session to a specific, verified local environment or host.
 
-# The Problem: Identity and Token Portability
+Workload identities are often represented by bearer tokens or keys that, once compromised, can be used by an attacker from any environment. This "portability" allows an attacker who achieves RCE on a workload (e.g., in Region A) to use the stolen keys or intercepted tokens from an attacking machine (e.g., in Region B).
 
-Workload identities are often represented by bearer tokens or keys that, once compromised, can be used by an attacker from any environment. This "portability" allows an attacker who achieves RCE on a workload (e.g., in Region A) to use the stolen keys or intercepted tokens from an attacking machine (e.g., in Region B). Even binding keys to the workload (DPoP) does not prevent the key itself from being exported if the environment is not sufficiently isolated, nor does it prevent a validly generated DPoP token from being replayed from a different VPC if the resource server does not enforce residency.
+In the context of **Sovereign Workloads**, this portability is more than a technical vulnerability; it is a **Sovereignty Violation**. If a workload is legally or logically required to operate within a specific jurisdiction, any identity that can be successfully verified from outside that jurisdiction represents a failure of the sovereign boundary. Relying Parties currently lack a standardized way to ensure that a presented identity is being used from the same verified host that was originally authorized.
 
 # The Solution: Transitive Attestation for Proof of Residency
 
