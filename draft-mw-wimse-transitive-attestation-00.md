@@ -1,6 +1,6 @@
 %%%
-title = "Zero-Trust Sovereign AI: Transitive Attestation for Workload Proof of Residency"
-abbrev = "ZTSA-TRANS-ATT"
+title = "Transitive Attestation for Sovereign AI: A WIMSE Profile"
+abbrev = "WIMSE-TRANS-POR"
 category = "info"
 docName = "draft-mw-wimse-transitive-attestation-00"
 ipr = "trust200902"
@@ -50,7 +50,7 @@ organization = "Aryaka"
 
 .# Abstract
 
-This document defines a **WIMSE Profile** for Transitive Attestation within the Workload Identity in Multi-Service Environments (WIMSE) framework. It provides the **Identity Conveyance** mechanism that consumes high-confidence **Evidence** (typically generated via a RATS-based profile such as [[!I-D.lkspa-wimse-verifiable-geo-fence]]) to cryptographically bind software workloads to their local execution environment.
+This document defines a **WIMSE Profile** for Transitive Attestation within the Workload Identity in Multi-Service Environments (WIMSE) framework, specifically tailored for **Sovereign AI** environments. It provides the **Identity Conveyance** mechanism that consumes high-confidence **Evidence** (typically generated via a RATS-based profile such as [[!I-D.lkspa-wimse-verifiable-geo-fence]]) to cryptographically bind software workloads to their local execution environment.
 
 {mainmatter}
 
