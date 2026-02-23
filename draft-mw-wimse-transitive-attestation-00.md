@@ -50,18 +50,24 @@ organization = "Aryaka"
 
 .# Abstract
 
-This document defines a **WIMSE Profile** for Transitive Attestation within the Workload Identity in Multi-Service Environments (WIMSE) framework, specifically tailored for **Sovereign Workload** environments. It provides the **Identity Conveyance** mechanism that consumes high-confidence **Evidence** (typically generated via a RATS-based profile such as [[!I-D.lkspa-wimse-verifiable-geo-fence]]) to cryptographically bind software workloads to their local execution environment.
+This document defines a **WIMSE Profile** for Transitive Attestation within the Workload Identity in Multi-Service Environments (WIMSE) framework. It addresses the critical problem of **Identity Portability**, where software credentials (e.g., bearer tokens or keys) can be misappropriated and used from unauthorized environments. By providing a standardized **Identity Conveyance** mechanism, this profile cryptographically binds software workloads to their local execution environment ("Proof of Residency") through a transitive chain of trust. This chain consumes high-confidence **Evidence** from the underlying platform (typically via a RATS-based profile such as [[!I-D.lkspa-wimse-verifiable-geo-fence]]) to ensure that an identity is only valid when used from a verified, integral, and geographically compliant host.
 
 {mainmatter}
 
 # Introduction
 
-This document defines the **WIMSE Profile** for "Transitive Attestation", addressing a critical technical gap in the high-level **WIMSE Architecture** [[!I-D.ietf-wimse-arch]] regarding how platform-level trust is transitively extended to software workloads. By addressing the **North-South** security axis of a workload's relationship with its local hosting environment, it ensures that the Workload Identity Agent—a central component in the WIMSE model—is empowered to issue identities that are cryptographically bound to a verified execution context.
+This document defines the **WIMSE Profile** for "Transitive Attestation", addressing a critical technical gap in the high-level **WIMSE Architecture** [[!I-D.ietf-wimse-arch]] regarding how platform-level trust is transitively extended to software workloads. 
+
+Currently, workload identities are often "context-agnostic"—once a credential (e.g., a bearer token) is issued, it can often be used from any environment. This **Identity Portability** allows an attacker who steals a token in one jurisdiction to use it from another, representing a significant **Sovereignty Violation** for workloads legally required to operate within specific boundaries.
+
+By addressing the **North-South** security axis of a workload's relationship with its local hosting environment, this profile establishes a **"Silicon-to-SVID"** chain of accountability. It ensures that the Workload Identity Agent (the local agent) is empowered to issue identities that are cryptographically bound to a verified execution context, rooting software identity in hardware evidence (e.g., TPM/TEE).
 
 This draft acts as the **Conveyance Layer** that integrates with the findings of a **RATS Profile** (such as **Verifiable Geofencing** [[!I-D.lkspa-wimse-verifiable-geo-fence]]) to establish two distinct levels of assurance:
 
-*   **Co-location Verification**: A logical binding that ensures the workload and its identity agent (Workload Identity Agent) are currently co-located on the same host, typically enforced via operating system isolation and local communication channels (e.g., Unix Domain Sockets).
-A workload obtains a fresh signature or proof from a local Workload Identity Agent, typically utilizing a **Workload Fusion Nonce (N_fusion)** to prevent replay. This identity is functionally "sticky" to the verified residence via a **Fast Path** renewal (see [[!I-D.lkspa-wimse-verifiable-geo-fence]]) which uses cached attestation results. A full, heavyweight OOB refresh in the Host Management Plane is triggered on a slower cadence or upon detection of platform drift.
+*   **Co-location Verification**: A logical binding that ensures the workload and its agent are currently co-located on the same host, typically enforced via operating system isolation and local communication channels (e.g., Unix Domain Sockets).
+*   **Residency Verification (High Assurance)**: A high-assurance binding where the Workload Identity Agent itself is proven to be integral and rooted in hardware. This ensures the identity is functionally "sticky" to the verified residence via a **Fast Path** renewal which uses cached attestation results.
+
+A workload obtains a fresh signature or proof from a local Workload Identity Agent, typically utilizing a **Workload Fusion Nonce (N_fusion)** to prevent replay. This ensures the identity—and the usage of its associated credentials—is sensitive to the physical or logical residence of the workload, complementing the "East-West" delegation models. Re-attestation follows a **Tiered Schedule** (see [[!I-D.lkspa-wimse-verifiable-geo-fence]]), separating frequent identity renewal from heavyweight platform evidence collection.
 
 # Terminology
 

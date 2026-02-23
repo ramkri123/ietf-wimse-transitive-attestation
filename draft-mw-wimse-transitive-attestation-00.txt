@@ -20,12 +20,17 @@ Abstract
 
    This document defines a *WIMSE Profile* for Transitive Attestation
    within the Workload Identity in Multi-Service Environments (WIMSE)
-   framework, specifically tailored for *Sovereign Workload*
-   environments.  It provides the *Identity Conveyance* mechanism that
-   consumes high-confidence *Evidence* (typically generated via a RATS-
-   based profile such as [[!I-D.lkspa-wimse-verifiable-geo-fence]]) to
-   cryptographically bind software workloads to their local execution
-   environment.
+   framework.  It addresses the critical problem of *Identity
+   Portability*, where software credentials (e.g., bearer tokens or
+   keys) can be misappropriated and used from unauthorized environments.
+   By providing a standardized *Identity Conveyance* mechanism, this
+   profile cryptographically binds software workloads to their local
+   execution environment ("Proof of Residency") through a transitive
+   chain of trust.  This chain consumes high-confidence *Evidence* from
+   the underlying platform (typically via a RATS-based profile such as
+   [[!I-D.lkspa-wimse-verifiable-geo-fence]]) to ensure that an identity
+   is only valid when used from a verified, integral, and geographically
+   compliant host.
 
 Status of This Memo
 
@@ -44,11 +49,6 @@ Status of This Memo
 
    This Internet-Draft will expire on 27 August 2026.
 
-Copyright Notice
-
-   Copyright (c) 2026 IETF Trust and the persons identified as the
-   document authors.  All rights reserved.
-
 
 
 
@@ -57,6 +57,11 @@ Krishnan, et al.         Expires 27 August 2026                 [Page 1]
 
 Internet-Draft               WIMSE-TRANS-POR               February 2026
 
+
+Copyright Notice
+
+   Copyright (c) 2026 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents (https://trustee.ietf.org/
@@ -75,37 +80,32 @@ Table of Contents
            Residency . . . . . . . . . . . . . . . . . . . . . . . .   4
      3.1.  mTLS-based Transitive Attestation . . . . . . . . . . . .   4
        3.1.1.  mTLS PoR Protocol Flow  . . . . . . . . . . . . . . .   4
-       3.1.2.  DPoR Protocol Flow  . . . . . . . . . . . . . . . . .   5
-   4.  Relation to Other IETF Work . . . . . . . . . . . . . . . . .   6
-   5.  Other Related Efforts . . . . . . . . . . . . . . . . . . . .   7
-   6.  Security Considerations . . . . . . . . . . . . . . . . . . .   8
-   7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   9
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   9
+       3.1.2.  DPoR Protocol Flow  . . . . . . . . . . . . . . . . .   6
+   4.  Relation to Other IETF Work . . . . . . . . . . . . . . . . .   7
+   5.  Other Related Efforts . . . . . . . . . . . . . . . . . . . .   8
+   6.  Security Considerations . . . . . . . . . . . . . . . . . . .   9
+   7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  10
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  10
 
 1.  Introduction
 
    This document defines the *WIMSE Profile* for "Transitive
    Attestation", addressing a critical technical gap in the high-level
    *WIMSE Architecture* [[!I-D.ietf-wimse-arch]] regarding how platform-
-   level trust is transitively extended to software workloads.  By
-   addressing the *North-South* security axis of a workload's
-   relationship with its local hosting environment, it ensures that the
-   Workload Identity Agent—a central component in the WIMSE model—is
-   empowered to issue identities that are cryptographically bound to a
-   verified execution context.
+   level trust is transitively extended to software workloads.
 
-   This draft acts as the *Conveyance Layer* that integrates with the
-   findings of a *RATS Profile* (such as *Verifiable Geofencing* [[!I-
-   D.lkspa-wimse-verifiable-geo-fence]]) to establish two distinct
-   levels of assurance:
+   Currently, workload identities are often "context-agnostic"—once a
+   credential (e.g., a bearer token) is issued, it can often be used
+   from any environment.  This *Identity Portability* allows an attacker
+   who steals a token in one jurisdiction to use it from another,
+   representing a significant *Sovereignty Violation* for workloads
+   legally required to operate within specific boundaries.
 
-   *  *Co-location Verification*: A logical binding that ensures the
-      workload and its identity agent (Workload Identity Agent) are
-      currently co-located on the same host, typically enforced via
-      operating system isolation and local communication channels (e.g.,
-      Unix Domain Sockets).  A workload obtains a fresh signature or
-      proof from a local Workload Identity Agent, typically utilizing a
-      *Workload Fusion Nonce (N_fusion)* to prevent replay.  This
+
+
+
+
+
 
 
 
@@ -114,11 +114,37 @@ Krishnan, et al.         Expires 27 August 2026                 [Page 2]
 Internet-Draft               WIMSE-TRANS-POR               February 2026
 
 
-      identity is functionally "sticky" to the verified residence via a
-      *Fast Path* renewal (see [[!I-D.lkspa-wimse-verifiable-geo-
-      fence]]) which uses cached attestation results.  A full,
-      heavyweight OOB refresh in the Host Management Plane is triggered
-      on a slower cadence or upon detection of platform drift.
+   By addressing the *North-South* security axis of a workload's
+   relationship with its local hosting environment, this profile
+   establishes a *"Silicon-to-SVID"* chain of accountability.  It
+   ensures that the Workload Identity Agent (the local agent) is
+   empowered to issue identities that are cryptographically bound to a
+   verified execution context, rooting software identity in hardware
+   evidence (e.g., TPM/TEE).
+
+   This draft acts as the *Conveyance Layer* that integrates with the
+   findings of a *RATS Profile* (such as *Verifiable Geofencing* [[!I-
+   D.lkspa-wimse-verifiable-geo-fence]]) to establish two distinct
+   levels of assurance:
+
+   *  *Co-location Verification*: A logical binding that ensures the
+      workload and its agent are currently co-located on the same host,
+      typically enforced via operating system isolation and local
+      communication channels (e.g., Unix Domain Sockets).
+   *  *Residency Verification (High Assurance)*: A high-assurance
+      binding where the Workload Identity Agent itself is proven to be
+      integral and rooted in hardware.  This ensures the identity is
+      functionally "sticky" to the verified residence via a *Fast Path*
+      renewal which uses cached attestation results.
+
+   A workload obtains a fresh signature or proof from a local Workload
+   Identity Agent, typically utilizing a *Workload Fusion Nonce
+   (N_fusion)* to prevent replay.  This ensures the identity—and the
+   usage of its associated credentials—is sensitive to the physical or
+   logical residence of the workload, complementing the "East-West"
+   delegation models.  Re-attestation follows a *Tiered Schedule* (see
+   [[!I-D.lkspa-wimse-verifiable-geo-fence]]), separating frequent
+   identity renewal from heavyweight platform evidence collection.
 
 2.  Terminology
 
@@ -136,6 +162,14 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
       that acts as an *Attester* or *Attestation Intermediate* in the
       RATS framework.  It is responsible for providing Evidence or
       Attestation Results to a workload.
+
+
+
+Krishnan, et al.         Expires 27 August 2026                 [Page 3]
+
+Internet-Draft               WIMSE-TRANS-POR               February 2026
+
+
    Proof of Residency (PoR) / Co-location:  A cryptographic proof that
       binds a workload's current execution session to a specific,
       verified local environment or host.
@@ -161,15 +195,6 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
    lack a standardized way to ensure that a presented identity is being
    used from the same verified host that was originally authorized.
 
-
-
-
-
-Krishnan, et al.         Expires 27 August 2026                 [Page 3]
-
-Internet-Draft               WIMSE-TRANS-POR               February 2026
-
-
 3.  The Solution: Transitive Attestation for Proof of Residency
 
    "Transitive Attestation" establishes a chain of trust from a hardware
@@ -190,6 +215,16 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
 
    The mTLS-based flow integrates residency verification into the
    session establishment and validation phase:
+
+
+
+
+
+
+Krishnan, et al.         Expires 27 August 2026                 [Page 4]
+
+Internet-Draft               WIMSE-TRANS-POR               February 2026
+
 
    1.  *Certificate Extensions*: The client (workload) supplies an X.509
        certificate during the mTLS handshake containing a custom
@@ -217,15 +252,6 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
        Workload Identity Agent (typically via a Unix Domain Socket).
        The Workload Identity Agent verifies the local peer environment
        and signs the payload with its private key.
-
-
-
-
-Krishnan, et al.         Expires 27 August 2026                 [Page 4]
-
-Internet-Draft               WIMSE-TRANS-POR               February 2026
-
-
    5.  *PoR Submission*: The client sends this attested response to the
        resource server for verification.
    6.  *Workload Identity Manager or Server Verification*: The *Workload
@@ -243,6 +269,18 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
    Upon successful verification, the resource server has proof that the
    client identity (presented via mTLS) is currently resident in the
    same authorized environment as the verified Workload Identity Agent.
+
+
+
+
+
+
+
+
+Krishnan, et al.         Expires 27 August 2026                 [Page 5]
+
+Internet-Draft               WIMSE-TRANS-POR               February 2026
+
 
    "Demonstrating Proof of Residency" (DPoR) is an enhancement to the
    Demonstrating Proof-of-Possession (DPoP) mechanism defined in
@@ -274,14 +312,6 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
        key.
    4.  *DPoR Assertion Submission*: The client includes the resulting
        signature in a DPoR header or as an extension to the DPoP JWT.
-
-
-
-Krishnan, et al.         Expires 27 August 2026                 [Page 5]
-
-Internet-Draft               WIMSE-TRANS-POR               February 2026
-
-
    5.  *Workload Identity Manager or Server Verification*: The *Workload
        Identity Manager (Workload Identity Manager)* or Resource Server
        performs a joint verification of possession and residency:
@@ -297,6 +327,16 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
    from a different machine, as the resource server would detect the
    lack of a valid, hardware-rooted residency proof for that specific
    key from the new environment.
+
+
+
+
+
+
+Krishnan, et al.         Expires 27 August 2026                 [Page 6]
+
+Internet-Draft               WIMSE-TRANS-POR               February 2026
+
 
 4.  Relation to Other IETF Work
 
@@ -331,13 +371,6 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
 
                                   Table 1
 
-
-
-Krishnan, et al.         Expires 27 August 2026                 [Page 6]
-
-Internet-Draft               WIMSE-TRANS-POR               February 2026
-
-
    1.  *Transitive Attestation (WIMSE) - Layer 1 (Conveyance)*: This
        document act as the technical integrator profile for WIMSE.  It
        standardizes how local context results are transitively extended
@@ -353,6 +386,14 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
    3.  *Actor Chain - The Delegation*: Complements this draft by
        addressing the *East-West* axis of agent-to-agent communication
        [[!I-D.draft-mw-spice-actor-chain]].  While Transitive
+
+
+
+Krishnan, et al.         Expires 27 August 2026                 [Page 7]
+
+Internet-Draft               WIMSE-TRANS-POR               February 2026
+
+
        Attestation proves _where_ an actor is running (North-South), the
        Actor Chain proves _who_ called whom across the network (East-
        West).
@@ -386,14 +427,6 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
       cryptographically bound to the hardware-rooted residency assertion
       provided by the SPIRE Agent (acting as the Workload Identity
       Agent).
-
-
-
-Krishnan, et al.         Expires 27 August 2026                 [Page 7]
-
-Internet-Draft               WIMSE-TRANS-POR               February 2026
-
-
    *  *Confidential Computing Consortium (CCC)*: Proof of Residency
       (PoR) provides the cryptographic evidence required for "*Sovereign
       Workloads*" and "Data-in-Use" protection models.  In Confidential
@@ -407,6 +440,15 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
       2.  *Workload Measurements*: Measurements of the workload's code/
           memory image and custom metadata (e.g., via the REPORT_DATA
           field).
+
+
+
+
+
+Krishnan, et al.         Expires 27 August 2026                 [Page 8]
+
+Internet-Draft               WIMSE-TRANS-POR               February 2026
+
 
    While these direct quotes provide high-assurance hardware-direct
    residency, the *Transitive Attestation* model specified in this
@@ -442,14 +484,6 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
    1.  *Locally Attested*: Linked to the local Workload Identity Agent's
        signing interface, typically protected by OS permissions or
        hardware roots.
-
-
-
-Krishnan, et al.         Expires 27 August 2026                 [Page 8]
-
-Internet-Draft               WIMSE-TRANS-POR               February 2026
-
-
    2.  *Context-Specific*: Bound to a fresh, server-provided nonce and a
        current timestamp.
    3.  *Protected*: Access to the Workload Identity Agent's signing
@@ -462,6 +496,15 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
    software-based agent provides strong logical isolation, a hardware-
    rooted agent (see [[!I-D.lkspa-wimse-verifiable-geo-fence]]) provides
    the highest level of protection against agent cloning and export.
+
+
+
+
+
+Krishnan, et al.         Expires 27 August 2026                 [Page 9]
+
+Internet-Draft               WIMSE-TRANS-POR               February 2026
+
 
    The security of this model relies on the *Host Management Plane*
    correctly binding the identity renewal challenge (N_fusion) to a
@@ -501,4 +544,17 @@ Authors' Addresses
 
 
 
-Krishnan, et al.         Expires 27 August 2026                 [Page 9]
+
+
+
+
+
+
+
+
+
+
+
+
+
+Krishnan, et al.         Expires 27 August 2026                [Page 10]

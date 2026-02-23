@@ -9,9 +9,9 @@
 <meta content="A Prasad" name="author">
 <meta content="Diego R. Lopez" name="author">
 <meta content="Srinivasa Addepalli" name="author">
-<meta content="
-       This document defines a  WIMSE Profile  for Transitive Attestation within the Workload Identity in Multi-Service Environments (WIMSE) framework, specifically tailored for  Sovereign Workload  environments. It provides the  Identity Conveyance  mechanism that consumes high-confidence  Evidence  (typically generated via a RATS-based profile such as [[!I-D.lkspa-wimse-verifiable-geo-fence]]) to cryptographically bind software workloads to their local execution environment. 
-    " name="description">
+<meta content='
+       This document defines a  WIMSE Profile  for Transitive Attestation within the Workload Identity in Multi-Service Environments (WIMSE) framework. It addresses the critical problem of  Identity Portability , where software credentials (e.g., bearer tokens or keys) can be misappropriated and used from unauthorized environments. By providing a standardized  Identity Conveyance  mechanism, this profile cryptographically binds software workloads to their local execution environment ("Proof of Residency") through a transitive chain of trust. This chain consumes high-confidence  Evidence  from the underlying platform (typically via a RATS-based profile such as [[!I-D.lkspa-wimse-verifiable-geo-fence]]) to ensure that an identity is only valid when used from a verified, integral, and geographically compliant host. 
+    ' name="description">
 <meta content="xml2rfc 3.31.0" name="generator">
 <meta content="attestation" name="keyword">
 <meta content="wimse" name="keyword">
@@ -1269,7 +1269,7 @@ li > p:last-of-type:only-child {
 <h1 id="title">Transitive Attestation for Sovereign Workloads: A WIMSE Profile</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
-<p id="section-abstract-1">This document defines a <strong>WIMSE Profile</strong> for Transitive Attestation within the Workload Identity in Multi-Service Environments (WIMSE) framework, specifically tailored for <strong>Sovereign Workload</strong> environments. It provides the <strong>Identity Conveyance</strong> mechanism that consumes high-confidence <strong>Evidence</strong> (typically generated via a RATS-based profile such as [[!I-D.lkspa-wimse-verifiable-geo-fence]]) to cryptographically bind software workloads to their local execution environment.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-1">This document defines a <strong>WIMSE Profile</strong> for Transitive Attestation within the Workload Identity in Multi-Service Environments (WIMSE) framework. It addresses the critical problem of <strong>Identity Portability</strong>, where software credentials (e.g., bearer tokens or keys) can be misappropriated and used from unauthorized environments. By providing a standardized <strong>Identity Conveyance</strong> mechanism, this profile cryptographically binds software workloads to their local execution environment ("Proof of Residency") through a transitive chain of trust. This chain consumes high-confidence <strong>Evidence</strong> from the underlying platform (typically via a RATS-based profile such as [[!I-D.lkspa-wimse-verifiable-geo-fence]]) to ensure that an identity is only valid when used from a verified, integral, and geographically compliant host.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <div id="status-of-memo">
 <section id="section-boilerplate.1">
@@ -1365,14 +1365,19 @@ li > p:last-of-type:only-child {
       <h2 id="name-introduction">
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
-<p id="section-1-1">This document defines the <strong>WIMSE Profile</strong> for "Transitive Attestation", addressing a critical technical gap in the high-level <strong>WIMSE Architecture</strong> [[!I-D.ietf-wimse-arch]] regarding how platform-level trust is transitively extended to software workloads. By addressing the <strong>North-South</strong> security axis of a workload's relationship with its local hosting environment, it ensures that the Workload Identity Agent—a central component in the WIMSE model—is empowered to issue identities that are cryptographically bound to a verified execution context.<a href="#section-1-1" class="pilcrow">¶</a></p>
-<p id="section-1-2">This draft acts as the <strong>Conveyance Layer</strong> that integrates with the findings of a <strong>RATS Profile</strong> (such as <strong>Verifiable Geofencing</strong> [[!I-D.lkspa-wimse-verifiable-geo-fence]]) to establish two distinct levels of assurance:<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-1">This document defines the <strong>WIMSE Profile</strong> for "Transitive Attestation", addressing a critical technical gap in the high-level <strong>WIMSE Architecture</strong> [[!I-D.ietf-wimse-arch]] regarding how platform-level trust is transitively extended to software workloads.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">Currently, workload identities are often "context-agnostic"—once a credential (e.g., a bearer token) is issued, it can often be used from any environment. This <strong>Identity Portability</strong> allows an attacker who steals a token in one jurisdiction to use it from another, representing a significant <strong>Sovereignty Violation</strong> for workloads legally required to operate within specific boundaries.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-3">By addressing the <strong>North-South</strong> security axis of a workload's relationship with its local hosting environment, this profile establishes a <strong>"Silicon-to-SVID"</strong> chain of accountability. It ensures that the Workload Identity Agent (the local agent) is empowered to issue identities that are cryptographically bound to a verified execution context, rooting software identity in hardware evidence (e.g., TPM/TEE).<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-4">This draft acts as the <strong>Conveyance Layer</strong> that integrates with the findings of a <strong>RATS Profile</strong> (such as <strong>Verifiable Geofencing</strong> [[!I-D.lkspa-wimse-verifiable-geo-fence]]) to establish two distinct levels of assurance:<a href="#section-1-4" class="pilcrow">¶</a></p>
 <ul class="compact">
-<li class="compact" id="section-1-3.1">
-          <strong>Co-location Verification</strong>: A logical binding that ensures the workload and its identity agent (Workload Identity Agent) are currently co-located on the same host, typically enforced via operating system isolation and local communication channels (e.g., Unix Domain Sockets).
-A workload obtains a fresh signature or proof from a local Workload Identity Agent, typically utilizing a <strong>Workload Fusion Nonce (N_fusion)</strong> to prevent replay. This identity is functionally "sticky" to the verified residence via a <strong>Fast Path</strong> renewal (see [[!I-D.lkspa-wimse-verifiable-geo-fence]]) which uses cached attestation results. A full, heavyweight OOB refresh in the Host Management Plane is triggered on a slower cadence or upon detection of platform drift.<a href="#section-1-3.1" class="pilcrow">¶</a>
+<li class="compact" id="section-1-5.1">
+          <strong>Co-location Verification</strong>: A logical binding that ensures the workload and its agent are currently co-located on the same host, typically enforced via operating system isolation and local communication channels (e.g., Unix Domain Sockets).<a href="#section-1-5.1" class="pilcrow">¶</a>
+</li>
+        <li class="compact" id="section-1-5.2">
+          <strong>Residency Verification (High Assurance)</strong>: A high-assurance binding where the Workload Identity Agent itself is proven to be integral and rooted in hardware. This ensures the identity is functionally "sticky" to the verified residence via a <strong>Fast Path</strong> renewal which uses cached attestation results.<a href="#section-1-5.2" class="pilcrow">¶</a>
 </li>
       </ul>
+<p id="section-1-6">A workload obtains a fresh signature or proof from a local Workload Identity Agent, typically utilizing a <strong>Workload Fusion Nonce (N_fusion)</strong> to prevent replay. This ensures the identity—and the usage of its associated credentials—is sensitive to the physical or logical residence of the workload, complementing the "East-West" delegation models. Re-attestation follows a <strong>Tiered Schedule</strong> (see [[!I-D.lkspa-wimse-verifiable-geo-fence]]), separating frequent identity renewal from heavyweight platform evidence collection.<a href="#section-1-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="terminology">
