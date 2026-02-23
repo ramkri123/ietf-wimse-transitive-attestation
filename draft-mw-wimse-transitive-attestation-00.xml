@@ -3,7 +3,7 @@
 <rfc version="3" ipr="trust200902" docName="draft-mw-wimse-transitive-attestation-00" submissionType="IETF" category="info" xml:lang="en" xmlns:xi="http://www.w3.org/2001/XInclude" indexInclude="true">
 
 <front>
-<title abbrev="WIMSE-TRANS-ATT">Transitive Attestation for Workload Proof of Residency</title><seriesInfo value="draft-mw-wimse-transitive-attestation-00" status="informational" name="Internet-Draft"></seriesInfo>
+<title abbrev="ZTSA-TRANS-ATT">Zero-Trust Sovereign AI: Transitive Attestation for Workload Proof of Residency</title><seriesInfo value="draft-mw-wimse-transitive-attestation-00" status="informational" name="Internet-Draft"></seriesInfo>
 <author initials="R." surname="Krishnan" fullname="Ram Krishnan"><organization>JPMorgan Chase &amp; Co</organization><address><postal><street></street>
 </postal><email>ramkri123@gmail.com</email>
 </address></author><author initials="A." surname="Prasad" fullname="A Prasad"><organization>Oracle</organization><address><postal><street></street>

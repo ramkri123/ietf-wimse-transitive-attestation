@@ -1,6 +1,6 @@
 %%%
-title = "Transitive Attestation for Workload Proof of Residency"
-abbrev = "WIMSE-TRANS-ATT"
+title = "Zero-Trust Sovereign AI: Transitive Attestation for Workload Proof of Residency"
+abbrev = "ZTSA-TRANS-ATT"
 category = "info"
 docName = "draft-mw-wimse-transitive-attestation-00"
 ipr = "trust200902"
