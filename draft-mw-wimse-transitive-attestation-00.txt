@@ -5,12 +5,12 @@
 WIMSE                                                        R. Krishnan
 Internet-Draft                                       JPMorgan Chase & Co
 Intended status: Informational                                 A. Prasad
-Expires: 27 August 2026                                           Oracle
+Expires: 28 August 2026                                           Oracle
                                                                 D. Lopez
                                                               Telefonica
                                                             S. Addepalli
                                                                   Aryaka
-                                                        23 February 2026
+                                                        24 February 2026
 
 
     Transitive Attestation for Sovereign Workloads: A WIMSE Profile
@@ -53,12 +53,12 @@ Status of This Memo
 
 
 
-Krishnan, et al.         Expires 27 August 2026                 [Page 1]
+Krishnan, et al.         Expires 28 August 2026                 [Page 1]
 
 Internet-Draft               WIMSE-TRANS-POR               February 2026
 
 
-   This Internet-Draft will expire on 27 August 2026.
+   This Internet-Draft will expire on 28 August 2026.
 
 Copyright Notice
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Krishnan, et al.         Expires 27 August 2026                 [Page 2]
+Krishnan, et al.         Expires 28 August 2026                 [Page 2]
 
 Internet-Draft               WIMSE-TRANS-POR               February 2026
 
@@ -165,7 +165,7 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
 
 
 
-Krishnan, et al.         Expires 27 August 2026                 [Page 3]
+Krishnan, et al.         Expires 28 August 2026                 [Page 3]
 
 Internet-Draft               WIMSE-TRANS-POR               February 2026
 
@@ -221,7 +221,7 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
 
 
 
-Krishnan, et al.         Expires 27 August 2026                 [Page 4]
+Krishnan, et al.         Expires 28 August 2026                 [Page 4]
 
 Internet-Draft               WIMSE-TRANS-POR               February 2026
 
@@ -277,7 +277,7 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
 
 
 
-Krishnan, et al.         Expires 27 August 2026                 [Page 5]
+Krishnan, et al.         Expires 28 August 2026                 [Page 5]
 
 Internet-Draft               WIMSE-TRANS-POR               February 2026
 
@@ -333,7 +333,7 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
 
 
 
-Krishnan, et al.         Expires 27 August 2026                 [Page 6]
+Krishnan, et al.         Expires 28 August 2026                 [Page 6]
 
 Internet-Draft               WIMSE-TRANS-POR               February 2026
 
@@ -389,7 +389,7 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
 
 
 
-Krishnan, et al.         Expires 27 August 2026                 [Page 7]
+Krishnan, et al.         Expires 28 August 2026                 [Page 7]
 
 Internet-Draft               WIMSE-TRANS-POR               February 2026
 
@@ -445,7 +445,7 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
 
 
 
-Krishnan, et al.         Expires 27 August 2026                 [Page 8]
+Krishnan, et al.         Expires 28 August 2026                 [Page 8]
 
 Internet-Draft               WIMSE-TRANS-POR               February 2026
 
@@ -501,7 +501,7 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
 
 
 
-Krishnan, et al.         Expires 27 August 2026                 [Page 9]
+Krishnan, et al.         Expires 28 August 2026                 [Page 9]
 
 Internet-Draft               WIMSE-TRANS-POR               February 2026
 
@@ -557,4 +557,4 @@ Authors' Addresses
 
 
 
-Krishnan, et al.         Expires 27 August 2026                [Page 10]
+Krishnan, et al.         Expires 28 August 2026                [Page 10]
