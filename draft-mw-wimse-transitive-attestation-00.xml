@@ -52,10 +52,10 @@
 <dt>Proof of Residency (PoR) / Co-location:</dt>
 <dd>A cryptographic proof that binds a workload's current execution session to a specific, verified local environment or host.</dd>
 <dt>N_fusion (Workload Fusion Nonce):</dt>
-<dd>A nonce provided by the Relying Party or Workload Identity Agent specifically for the workload-to-agent fusion flow. It ensures the freshness of the residency proof and cryptographically binds the workload's request to the local agent's attestation.</dd>
+<dd>A nonce provided by the Relying Party specifically for the workload-to-agent fusion flow. It ensures the freshness of the residency proof and cryptographically binds the workload's request to the local agent's attestation.</dd>
 </dl>
 <t>Workload identities are often represented by bearer tokens or keys that, once compromised, can be used by an attacker from any environment. This &quot;portability&quot; allows an attacker who achieves RCE on a workload (e.g., in Region A) or hijacks an AI agent's logic via <strong>prompt injection</strong> to use the stolen keys or intercepted tokens from an attacking machine (e.g., in Region B).</t>
-<t>In the context of <strong>Sovereign Workloads</strong>, this portability is more than a technical vulnerability; it is a <strong>Sovereignty Violation</strong>. If a workload is legally or logically required to operate within a specific jurisdiction, any identity that can be successfully verified from outside that jurisdiction represents a failure of the sovereign boundary. <strong>Workload Identity Managers</strong> and Relying Parties currently lack a standardized way to ensure that a presented identity is being used from the same verified host that was originally authorized.</t>
+<t>In the context of <strong>Sovereign Workloads</strong>, this portability is more than a technical vulnerability; it is a <strong>Sovereignty Violation</strong>. If a workload is legally or logically required to operate within a specific jurisdiction, any identity that can be successfully verified from outside that jurisdiction represents a failure of the sovereign boundary. Relying Parties currently lack a standardized way to ensure that a presented identity is being used from the same verified host that was originally authorized.</t>
 </section>
 
 <section anchor="scope-and-boundaries"><name>Scope and Boundaries</name>

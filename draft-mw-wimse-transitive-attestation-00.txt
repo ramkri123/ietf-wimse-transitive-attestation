@@ -190,10 +190,9 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
       binds a workload's current execution session to a specific,
       verified local environment or host.
    N_fusion (Workload Fusion Nonce):  A nonce provided by the Relying
-      Party or Workload Identity Agent specifically for the workload-to-
-      agent fusion flow.  It ensures the freshness of the residency
-      proof and cryptographically binds the workload's request to the
-      local agent's attestation.
+      Party specifically for the workload-to-agent fusion flow.  It
+      ensures the freshness of the residency proof and cryptographically
+      binds the workload's request to the local agent's attestation.
 
    Workload identities are often represented by bearer tokens or keys
    that, once compromised, can be used by an attacker from any
@@ -207,9 +206,9 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
    workload is legally or logically required to operate within a
    specific jurisdiction, any identity that can be successfully verified
    from outside that jurisdiction represents a failure of the sovereign
-   boundary. *Workload Identity Managers* and Relying Parties currently
-   lack a standardized way to ensure that a presented identity is being
-   used from the same verified host that was originally authorized.
+   boundary.  Relying Parties currently lack a standardized way to
+   ensure that a presented identity is being used from the same verified
+   host that was originally authorized.
 
 3.  Scope and Boundaries
 
@@ -218,6 +217,7 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
    standardizes how a workload proves its co-location with a local agent
    and how that proof is bound to application sessions (e.g., mTLS or
    DPoP).
+
 
 
 

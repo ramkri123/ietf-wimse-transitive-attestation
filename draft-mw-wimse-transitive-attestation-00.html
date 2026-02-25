@@ -1416,12 +1416,12 @@ li > p:last-of-type:only-child {
 </dd>
         <dd class="break"></dd>
 <dt id="section-2-3.5">N_fusion (Workload Fusion Nonce):</dt>
-        <dd style="margin-left: 1.5em" id="section-2-3.6">A nonce provided by the Relying Party or Workload Identity Agent specifically for the workload-to-agent fusion flow. It ensures the freshness of the residency proof and cryptographically binds the workload's request to the local agent's attestation.<a href="#section-2-3.6" class="pilcrow">¶</a>
+        <dd style="margin-left: 1.5em" id="section-2-3.6">A nonce provided by the Relying Party specifically for the workload-to-agent fusion flow. It ensures the freshness of the residency proof and cryptographically binds the workload's request to the local agent's attestation.<a href="#section-2-3.6" class="pilcrow">¶</a>
 </dd>
       <dd class="break"></dd>
 </dl>
 <p id="section-2-4">Workload identities are often represented by bearer tokens or keys that, once compromised, can be used by an attacker from any environment. This "portability" allows an attacker who achieves RCE on a workload (e.g., in Region A) or hijacks an AI agent's logic via <strong>prompt injection</strong> to use the stolen keys or intercepted tokens from an attacking machine (e.g., in Region B).<a href="#section-2-4" class="pilcrow">¶</a></p>
-<p id="section-2-5">In the context of <strong>Sovereign Workloads</strong>, this portability is more than a technical vulnerability; it is a <strong>Sovereignty Violation</strong>. If a workload is legally or logically required to operate within a specific jurisdiction, any identity that can be successfully verified from outside that jurisdiction represents a failure of the sovereign boundary. <strong>Workload Identity Managers</strong> and Relying Parties currently lack a standardized way to ensure that a presented identity is being used from the same verified host that was originally authorized.<a href="#section-2-5" class="pilcrow">¶</a></p>
+<p id="section-2-5">In the context of <strong>Sovereign Workloads</strong>, this portability is more than a technical vulnerability; it is a <strong>Sovereignty Violation</strong>. If a workload is legally or logically required to operate within a specific jurisdiction, any identity that can be successfully verified from outside that jurisdiction represents a failure of the sovereign boundary. Relying Parties currently lack a standardized way to ensure that a presented identity is being used from the same verified host that was originally authorized.<a href="#section-2-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="scope-and-boundaries">
