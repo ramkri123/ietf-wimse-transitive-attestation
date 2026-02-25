@@ -90,7 +90,7 @@ Proof of Residency (PoR) / Co-location:
 : A cryptographic proof that binds a workload's current execution session to a specific, verified local environment or host.
 
 N_fusion (Workload Fusion Nonce):
-: A nonce provided by the Resource Server or Workload Identity Agent specifically for the workload-to-agent fusion flow. It ensures the freshness of the residency proof and cryptographically binds the workload's request to the local agent's attestation.
+: A nonce provided by the Relying Party or Workload Identity Agent specifically for the workload-to-agent fusion flow. It ensures the freshness of the residency proof and cryptographically binds the workload's request to the local agent's attestation.
 
 Workload identities are often represented by bearer tokens or keys that, once compromised, can be used by an attacker from any environment. This "portability" allows an attacker who achieves RCE on a workload (e.g., in Region A) or hijacks an AI agent's logic via **prompt injection** to use the stolen keys or intercepted tokens from an attacking machine (e.g., in Region B).
 
@@ -121,7 +121,7 @@ In an mTLS environment, the Proof of Residency (PoR) is bound to the mutually au
 The mTLS-based flow integrates residency verification into the session establishment and validation phase:
 
 1. **Certificate Extensions**: The client (workload) supplies an X.509 certificate during the mTLS handshake containing a custom extension. This extension includes the public key or SVID details of the local Workload Identity Agent (Attester).
-2. **Post-Handshake Nonce**: After the mTLS handshake is successfully completed, the client requests a residency-specific nonce from the **Verifier** (e.g., Resource Server or Relying Party) to ensure anti-replay.
+2. **Post-Handshake Nonce**: After the mTLS handshake is successfully completed, the client requests a residency-specific nonce from the **Verifier** (e.g., Relying Party or Relying Party) to ensure anti-replay.
 3. **Local Attestation Binding**: The client constructs a PoR assertion payload containing:
     - A cryptographic hash of the TLS Exporter value [[RFC5705]].
     - The residency nonce provided by the server.
@@ -182,14 +182,14 @@ To prevent man-in-the-middle (MITM) and replay attacks, the hardware evidence mu
 *   **The Binding**: The workload places a hash of this TLS Exporter value into the **User Defined Data** field of the CC quote (e.g., `ReportData` in SGX or `RTMR` in TDX). 
 *   **Security Property**: This cryptographically binds the hardware evidence to that specific TLS session. If an attacker attempts to reuse the same quote on a different TLS session, the Exporter values will not match, and the verification will fail.
 
-### Resource Server Verification Loop
+### Relying Party Verification Loop
 
-The Resource Server (Verifier) completes the trust loop by performing the following steps:
+The Relying Party (Verifier) completes the trust loop by performing the following steps:
 
 1.  **Hardware Verification**: Receives the CC Quote and verifies the hardware signature (proving the code is running in a real TEE).
 2.  **Extractor**: Extracts the TLS Exporter value (or its hash) from the quote's metadata (User Defined Data).
 3.  **Comparison**: Compares this value to its own locally computed TLS Exporter value for the current active connection.
-4.  **Enforcement**: If they match, the Resource Server is certain that the entity it is talking to via TLS is the *exact same entity* that generated the hardware attestation.
+4.  **Enforcement**: If they match, the Relying Party is certain that the entity it is talking to via TLS is the *exact same entity* that generated the hardware attestation.
 
 This architecture ensures that identity is not just a bearer token, but is cryptographically tied to the verified runtime environment and the specific communication channel.
 

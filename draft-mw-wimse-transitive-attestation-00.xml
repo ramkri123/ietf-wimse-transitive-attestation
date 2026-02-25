@@ -52,7 +52,7 @@
 <dt>Proof of Residency (PoR) / Co-location:</dt>
 <dd>A cryptographic proof that binds a workload's current execution session to a specific, verified local environment or host.</dd>
 <dt>N_fusion (Workload Fusion Nonce):</dt>
-<dd>A nonce provided by the Resource Server or Workload Identity Agent specifically for the workload-to-agent fusion flow. It ensures the freshness of the residency proof and cryptographically binds the workload's request to the local agent's attestation.</dd>
+<dd>A nonce provided by the Relying Party or Workload Identity Agent specifically for the workload-to-agent fusion flow. It ensures the freshness of the residency proof and cryptographically binds the workload's request to the local agent's attestation.</dd>
 </dl>
 <t>Workload identities are often represented by bearer tokens or keys that, once compromised, can be used by an attacker from any environment. This &quot;portability&quot; allows an attacker who achieves RCE on a workload (e.g., in Region A) or hijacks an AI agent's logic via <strong>prompt injection</strong> to use the stolen keys or intercepted tokens from an attacking machine (e.g., in Region B).</t>
 <t>In the context of <strong>Sovereign Workloads</strong>, this portability is more than a technical vulnerability; it is a <strong>Sovereignty Violation</strong>. If a workload is legally or logically required to operate within a specific jurisdiction, any identity that can be successfully verified from outside that jurisdiction represents a failure of the sovereign boundary. <strong>Workload Identity Managers</strong> and Relying Parties currently lack a standardized way to ensure that a presented identity is being used from the same verified host that was originally authorized.</t>
@@ -81,7 +81,7 @@
 
 <ol spacing="compact">
 <li><strong>Certificate Extensions</strong>: The client (workload) supplies an X.509 certificate during the mTLS handshake containing a custom extension. This extension includes the public key or SVID details of the local Workload Identity Agent (Attester).</li>
-<li><strong>Post-Handshake Nonce</strong>: After the mTLS handshake is successfully completed, the client requests a residency-specific nonce from the <strong>Verifier</strong> (e.g., Resource Server or Relying Party) to ensure anti-replay.</li>
+<li><strong>Post-Handshake Nonce</strong>: After the mTLS handshake is successfully completed, the client requests a residency-specific nonce from the <strong>Verifier</strong> (e.g., Relying Party or Relying Party) to ensure anti-replay.</li>
 <li><t><strong>Local Attestation Binding</strong>: The client constructs a PoR assertion payload containing:</t>
 
 <ul spacing="compact">
@@ -162,14 +162,14 @@ By binding to the TLS Exporter instead of the application traffic keys, the Proo
 </ul>
 </section>
 
-<section anchor="resource-server-verification-loop"><name>Resource Server Verification Loop</name>
-<t>The Resource Server (Verifier) completes the trust loop by performing the following steps:</t>
+<section anchor="relying-party-verification-loop"><name>Relying Party Verification Loop</name>
+<t>The Relying Party (Verifier) completes the trust loop by performing the following steps:</t>
 
 <ol spacing="compact">
 <li><strong>Hardware Verification</strong>: Receives the CC Quote and verifies the hardware signature (proving the code is running in a real TEE).</li>
 <li><strong>Extractor</strong>: Extracts the TLS Exporter value (or its hash) from the quote's metadata (User Defined Data).</li>
 <li><strong>Comparison</strong>: Compares this value to its own locally computed TLS Exporter value for the current active connection.</li>
-<li><strong>Enforcement</strong>: If they match, the Resource Server is certain that the entity it is talking to via TLS is the <em>exact same entity</em> that generated the hardware attestation.</li>
+<li><strong>Enforcement</strong>: If they match, the Relying Party is certain that the entity it is talking to via TLS is the <em>exact same entity</em> that generated the hardware attestation.</li>
 </ol>
 <t>This architecture ensures that identity is not just a bearer token, but is cryptographically tied to the verified runtime environment and the specific communication channel.</t>
 </section>

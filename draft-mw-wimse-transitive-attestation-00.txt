@@ -93,7 +93,7 @@ Table of Contents
      4.3.  Confidential Computing and Hardware-Rooted Binding  . . .   7
        4.3.1.  Logical Quoting Enclave . . . . . . . . . . . . . . .   7
        4.3.2.  Channel Binding via TLS Exporter  . . . . . . . . . .   8
-       4.3.3.  Resource Server Verification Loop . . . . . . . . . .   8
+       4.3.3.  Relying Party Verification Loop . . . . . . . . . . .   8
    5.  Relation to Other IETF Work . . . . . . . . . . . . . . . . .   9
    6.  Security Considerations . . . . . . . . . . . . . . . . . . .  10
    7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  11
@@ -189,9 +189,9 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
    Proof of Residency (PoR) / Co-location:  A cryptographic proof that
       binds a workload's current execution session to a specific,
       verified local environment or host.
-   N_fusion (Workload Fusion Nonce):  A nonce provided by the Resource
-      Server or Workload Identity Agent specifically for the workload-
-      to-agent fusion flow.  It ensures the freshness of the residency
+   N_fusion (Workload Fusion Nonce):  A nonce provided by the Relying
+      Party or Workload Identity Agent specifically for the workload-to-
+      agent fusion flow.  It ensures the freshness of the residency
       proof and cryptographically binds the workload's request to the
       local agent's attestation.
 
@@ -272,7 +272,7 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
        details of the local Workload Identity Agent (Attester).
    2.  *Post-Handshake Nonce*: After the mTLS handshake is successfully
        completed, the client requests a residency-specific nonce from
-       the *Verifier* (e.g., Resource Server or Relying Party) to ensure
+       the *Verifier* (e.g., Relying Party or Relying Party) to ensure
        anti-replay.
 
 
@@ -425,9 +425,9 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
       reuse the same quote on a different TLS session, the Exporter
       values will not match, and the verification will fail.
 
-4.3.3.  Resource Server Verification Loop
+4.3.3.  Relying Party Verification Loop
 
-   The Resource Server (Verifier) completes the trust loop by performing
+   The Relying Party (Verifier) completes the trust loop by performing
    the following steps:
 
    1.  *Hardware Verification*: Receives the CC Quote and verifies the
@@ -436,7 +436,7 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
        the quote's metadata (User Defined Data).
    3.  *Comparison*: Compares this value to its own locally computed TLS
        Exporter value for the current active connection.
-   4.  *Enforcement*: If they match, the Resource Server is certain that
+   4.  *Enforcement*: If they match, the Relying Party is certain that
        the entity it is talking to via TLS is the _exact same entity_
        that generated the hardware attestation.
 
