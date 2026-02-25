@@ -5,12 +5,12 @@
 WIMSE                                                        R. Krishnan
 Internet-Draft                                       JPMorgan Chase & Co
 Intended status: Informational                                 A. Prasad
-Expires: 28 August 2026                                           Oracle
+Expires: 29 August 2026                                           Oracle
                                                                 D. Lopez
                                                               Telefonica
                                                             S. Addepalli
                                                                   Aryaka
-                                                        24 February 2026
+                                                        25 February 2026
 
 
     Transitive Attestation for Sovereign Workloads: A WIMSE Profile
@@ -34,7 +34,10 @@ Abstract
    residency verification and *standard* Workload Identity Agents for
    basic co-location proofs—to ensure that an identity is only valid
    when used from a verified, integral, or geographically compliant
-   host.
+   host.  The integrity and hardware-rooted security of the Workload
+   Identity Agent itself is considered out-of-scope for this document
+   and is addressed in the *Verifiable Geofencing* profile [[!I-D.lkspa-
+   wimse-verifiable-geo-fence]].
 
 Status of This Memo
 
@@ -46,19 +49,21 @@ Status of This Memo
    working documents as Internet-Drafts.  The list of current Internet-
    Drafts is at https://datatracker.ietf.org/drafts/current/.
 
+
+
+
+
+Krishnan, et al.         Expires 29 August 2026                 [Page 1]
+
+Internet-Draft               WIMSE-TRANS-POR               February 2026
+
+
    Internet-Drafts are draft documents valid for a maximum of six months
    and may be updated, replaced, or obsoleted by other documents at any
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-
-
-Krishnan, et al.         Expires 28 August 2026                 [Page 1]
-
-Internet-Draft               WIMSE-TRANS-POR               February 2026
-
-
-   This Internet-Draft will expire on 28 August 2026.
+   This Internet-Draft will expire on 29 August 2026.
 
 Copyright Notice
 
@@ -78,16 +83,21 @@ Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
    2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   4
-   3.  The Solution: Transitive Attestation for Proof of
+   3.  Scope and Boundaries  . . . . . . . . . . . . . . . . . . . .   4
+   4.  The Solution: Transitive Attestation for Proof of
            Residency . . . . . . . . . . . . . . . . . . . . . . . .   5
-     3.1.  mTLS-based Transitive Attestation . . . . . . . . . . . .   5
-       3.1.1.  mTLS PoR Protocol Flow  . . . . . . . . . . . . . . .   5
-       3.1.2.  DPoR Protocol Flow  . . . . . . . . . . . . . . . . .   6
-   4.  Relation to Other IETF Work . . . . . . . . . . . . . . . . .   7
-   5.  Other Related Efforts . . . . . . . . . . . . . . . . . . . .   8
-   6.  Security Considerations . . . . . . . . . . . . . . . . . . .   9
-   7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  10
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  10
+     4.1.  mTLS-based Transitive Attestation . . . . . . . . . . . .   5
+       4.1.1.  mTLS PoR Protocol Flow  . . . . . . . . . . . . . . .   5
+     4.2.  Demonstrating Proof of Residency (DPoR) . . . . . . . . .   6
+       4.2.1.  DPoR Protocol Flow  . . . . . . . . . . . . . . . . .   6
+     4.3.  Confidential Computing and Hardware-Rooted Binding  . . .   7
+       4.3.1.  Logical Quoting Enclave . . . . . . . . . . . . . . .   7
+       4.3.2.  Channel Binding via TLS Exporter  . . . . . . . . . .   8
+       4.3.3.  Resource Server Verification Loop . . . . . . . . . .   8
+   5.  Relation to Other IETF Work . . . . . . . . . . . . . . . . .   9
+   6.  Security Considerations . . . . . . . . . . . . . . . . . . .  10
+   7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  11
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  11
 
 1.  Introduction
 
@@ -99,17 +109,7 @@ Table of Contents
 
 
 
-
-
-
-
-
-
-
-
-
-
-Krishnan, et al.         Expires 28 August 2026                 [Page 2]
+Krishnan, et al.         Expires 29 August 2026                 [Page 2]
 
 Internet-Draft               WIMSE-TRANS-POR               February 2026
 
@@ -165,7 +165,7 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
 
 
 
-Krishnan, et al.         Expires 28 August 2026                 [Page 3]
+Krishnan, et al.         Expires 29 August 2026                 [Page 3]
 
 Internet-Draft               WIMSE-TRANS-POR               February 2026
 
@@ -191,10 +191,9 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
       verified local environment or host.
    N_fusion (Workload Fusion Nonce):  A nonce provided by the Resource
       Server or Workload Identity Agent specifically for the workload-
-      to-agent fusion flow.  To prevent "mix-and-match" attacks, the
-      *Host Management Plane* SHALL cryptographically bind N_fusion to
-      the platform-level nonce (*N_platform*) within its signed
-      Attestation Result.
+      to-agent fusion flow.  It ensures the freshness of the residency
+      proof and cryptographically binds the workload's request to the
+      local agent's attestation.
 
    Workload identities are often represented by bearer tokens or keys
    that, once compromised, can be used by an attacker from any
@@ -212,21 +211,41 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
    lack a standardized way to ensure that a presented identity is being
    used from the same verified host that was originally authorized.
 
+3.  Scope and Boundaries
+
+   This document focuses on the *Identity Conveyance* and *Session
+   Binding* mechanisms required for Transitive Attestation.  It
+   standardizes how a workload proves its co-location with a local agent
+   and how that proof is bound to application sessions (e.g., mTLS or
+   DPoP).
 
 
 
-
-
-
-
-
-
-Krishnan, et al.         Expires 28 August 2026                 [Page 4]
+Krishnan, et al.         Expires 29 August 2026                 [Page 4]
 
 Internet-Draft               WIMSE-TRANS-POR               February 2026
 
 
-3.  The Solution: Transitive Attestation for Proof of Residency
+   The following areas are explicitly *OUT OF SCOPE* for this profile:
+
+   *  *Agent Identity and Integrity*: The mechanism by which a Workload
+      Identity Agent (e.g., SPIRE Agent) proves its own identity and
+      code integrity to a remote verifier.
+   *  *Platform Attestation*: The collection and verification of
+      hardware-level evidence (TPM quotes, TEE measurements) for the
+      host platform.
+   *  *Workload Identity Manager Interactions*: The specific protocols
+      and APIs for obtaining nonces or credentials from a *Workload
+      Identity Manager (WIM Manager)* during the issuance phase (e.g.,
+      SVID CSRs).
+
+   These security guarantees are provided by the underlying *RATS
+   Profile* for *Verifiable Geofencing* [[!I-D.lkspa-wimse-verifiable-
+   geo-fence]].  This WIMSE profile assumes that the Workload Identity
+   Agent is operating in a verified, integral state as established by
+   the Geofencing layer.
+
+4.  The Solution: Transitive Attestation for Proof of Residency
 
    "Transitive Attestation" establishes a chain of trust from a hardware
    root through a local agent to the workload.  The Workload Identity
@@ -236,13 +255,13 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
    kernel-level guarantee that the workload is co-located with the
    hardware-rooted agent.
 
-3.1.  mTLS-based Transitive Attestation
+4.1.  mTLS-based Transitive Attestation
 
    In an mTLS environment, the Proof of Residency (PoR) is bound to the
    mutually authenticated session and the local execution context via a
    transitive chain of trust.
 
-3.1.1.  mTLS PoR Protocol Flow
+4.1.1.  mTLS PoR Protocol Flow
 
    The mTLS-based flow integrates residency verification into the
    session establishment and validation phase:
@@ -253,8 +272,16 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
        details of the local Workload Identity Agent (Attester).
    2.  *Post-Handshake Nonce*: After the mTLS handshake is successfully
        completed, the client requests a residency-specific nonce from
-       the *Workload Identity Manager (Workload Identity Manager)* or
-       Resource Server (Verifier/Relying Party) to ensure anti-replay.
+       the *Verifier* (e.g., Resource Server or Relying Party) to ensure
+       anti-replay.
+
+
+
+Krishnan, et al.         Expires 29 August 2026                 [Page 5]
+
+Internet-Draft               WIMSE-TRANS-POR               February 2026
+
+
    3.  *Local Attestation Binding*: The client constructs a PoR
        assertion payload containing:
        *  A cryptographic hash of the TLS Exporter value [[RFC5705]].
@@ -273,20 +300,10 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
        Workload Identity Agent (typically via a Unix Domain Socket).
        The Workload Identity Agent verifies the local peer environment
        and signs the payload with its private key.
-
-
-
-
-Krishnan, et al.         Expires 28 August 2026                 [Page 5]
-
-Internet-Draft               WIMSE-TRANS-POR               February 2026
-
-
    5.  *PoR Submission*: The client sends this attested response to the
        resource server for verification.
-   6.  *Workload Identity Manager or Server Verification*: The *Workload
-       Identity Manager (Workload Identity Manager)* or Resource Server
-       performs a joint verification of identity and residency:
+   6.  *Server Verification*: The *Verifier* performs a joint
+       verification of identity and residency:
        *  *Identity*: Verifies the client certificate as part of
           standard mTLS.
        *  *Residency*: Verifies the PoR assertion signature against the
@@ -300,6 +317,8 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
    client identity (presented via mTLS) is currently resident in the
    same authorized environment as the verified Workload Identity Agent.
 
+4.2.  Demonstrating Proof of Residency (DPoR)
+
    "Demonstrating Proof of Residency" (DPoR) is an enhancement to the
    Demonstrating Proof-of-Possession (DPoP) mechanism defined in
    [[RFC9449]].  While DPoP ensures _possession_ of a private key held
@@ -307,13 +326,19 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
    the workload using that key by binding the request to a local
    attestation.
 
-3.1.2.  DPoR Protocol Flow
+4.2.1.  DPoR Protocol Flow
 
    The DPoR flow integrates residency verification into the per-request
    application-level authorization:
 
-   1.  *Nonced Request*: The *Workload Identity Manager (Workload
-       Identity Manager)* or Resource Server SHOULD provide a residency-
+
+
+Krishnan, et al.         Expires 29 August 2026                 [Page 6]
+
+Internet-Draft               WIMSE-TRANS-POR               February 2026
+
+
+   1.  *Nonced Request*: The *Verifier* SHOULD provide a residency-
        specific nonce (e.g., via a DPoR-Nonce header) to the client to
        ensure anti-replay of the residency proof.
    2.  *Local Attestation Binding*: The client constructs a DPoR
@@ -330,17 +355,8 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
        key.
    4.  *DPoR Assertion Submission*: The client includes the resulting
        signature in a DPoR header or as an extension to the DPoP JWT.
-
-
-
-Krishnan, et al.         Expires 28 August 2026                 [Page 6]
-
-Internet-Draft               WIMSE-TRANS-POR               February 2026
-
-
-   5.  *Workload Identity Manager or Server Verification*: The *Workload
-       Identity Manager (Workload Identity Manager)* or Resource Server
-       performs a joint verification of possession and residency:
+   5.  *Server Verification*: The *Verifier* performs a joint
+       verification of possession and residency:
        *  *Possession*: Verifies the DPoP proof as per [[RFC9449]].
        *  *Residency*: Verifies the DPoR assertion signature against the
           Workload Identity Agent public key.
@@ -354,7 +370,91 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
    lack of a valid, hardware-rooted residency proof for that specific
    key from the new environment.
 
-4.  Relation to Other IETF Work
+4.3.  Confidential Computing and Hardware-Rooted Binding
+
+   In Confidential Computing (CC) environments, the Relationship between
+   high-level workload identities and hardware-rooted evidence is
+   formalized through specific architectural patterns.  This section
+   details how Transitive Attestation bridges the gap between hardware
+   quotes and application-layer identities.
+
+4.3.1.  Logical Quoting Enclave
+
+   In a Transitive Attestation model, trust is passed through a chain of
+   components.
+
+   *  *Hardware Layer*: A Confidential Computing environment (e.g.,
+      Intel TDX or SGX) provides a "Hardware Root of Trust."
+
+
+
+
+Krishnan, et al.         Expires 29 August 2026                 [Page 7]
+
+Internet-Draft               WIMSE-TRANS-POR               February 2026
+
+
+   *  *Intermediate Layer (Workload Identity Agent)*: In this profile,
+      the Workload Identity Agent (e.g., a SPIRE Agent) is treated as
+      the trusted software component that "vouches" for the workloads.
+   *  *Logical Equivalent*: By running the Workload Identity Agent
+      inside a TEE (Trusted Execution Environment), the hardware can
+      attest to the integrity of the agent.  This allows the agent to
+      act as a "Compliance Bridge" as defined in [[!I-D.lkspa-wimse-
+      verifiable-geo-fence]].  Just as a hardware *Quoting Enclave (QE)*
+      signs a local report to turn it into a globally verifiable
+      "Quote," the Workload Identity Agent (running in a TEE) signs
+      Workload Identity Documents (SVIDs/WITs).  Effectively, the agent
+      becomes a _logical_ quoting enclave that bridges hardware-rooted
+      trust to software-level workload identities.
+
+4.3.2.  Channel Binding via TLS Exporter
+
+   To prevent man-in-the-middle (MITM) and replay attacks, the hardware
+   evidence must be cryptographically bound to the communication
+   channel.  This is achieved using the *TLS Exporter* [[RFC5705]].
+
+   *  *The Mechanism*: RFC 5705 allows both sides of a TLS session to
+      derive a unique, secret value (the Exporter) that is bound to that
+      specific handshake.
+   *  *The Binding*: The workload places a hash of this TLS Exporter
+      value into the *User Defined Data* field of the CC quote (e.g.,
+      ReportData in SGX or RTMR in TDX).
+   *  *Security Property*: This cryptographically binds the hardware
+      evidence to that specific TLS session.  If an attacker attempts to
+      reuse the same quote on a different TLS session, the Exporter
+      values will not match, and the verification will fail.
+
+4.3.3.  Resource Server Verification Loop
+
+   The Resource Server (Verifier) completes the trust loop by performing
+   the following steps:
+
+   1.  *Hardware Verification*: Receives the CC Quote and verifies the
+       hardware signature (proving the code is running in a real TEE).
+   2.  *Extractor*: Extracts the TLS Exporter value (or its hash) from
+       the quote's metadata (User Defined Data).
+   3.  *Comparison*: Compares this value to its own locally computed TLS
+       Exporter value for the current active connection.
+   4.  *Enforcement*: If they match, the Resource Server is certain that
+       the entity it is talking to via TLS is the _exact same entity_
+       that generated the hardware attestation.
+
+
+
+
+
+
+Krishnan, et al.         Expires 29 August 2026                 [Page 8]
+
+Internet-Draft               WIMSE-TRANS-POR               February 2026
+
+
+   This architecture ensures that identity is not just a bearer token,
+   but is cryptographically tied to the verified runtime environment and
+   the specific communication channel.
+
+5.  Relation to Other IETF Work
 
     +==============+==============+=========+=========================+
     | Layer        | Component    | WG      | Core Responsibility     |
@@ -387,19 +487,25 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
 
                                   Table 1
 
-
-
-Krishnan, et al.         Expires 28 August 2026                 [Page 7]
-
-Internet-Draft               WIMSE-TRANS-POR               February 2026
-
-
    1.  *Transitive Attestation (WIMSE) - Layer 1 (Conveyance)*: This
        document act as the technical integrator profile for WIMSE.  It
        standardizes how local context results are transitively extended
        to workloads.  It reflects its status as the *Consumer* of
        attestation results to address the *North-South* identity
        portability problem.
+
+
+
+
+
+
+
+
+Krishnan, et al.         Expires 29 August 2026                 [Page 9]
+
+Internet-Draft               WIMSE-TRANS-POR               February 2026
+
+
    2.  *Verifiable Geofencing (RATS) - Layer 2 & 3 (Evidence)*: Defined
        in [[!I-D.lkspa-wimse-verifiable-geo-fence]].  This document acts
        as the *RATS Profile* that provides the hardware-rooted
@@ -431,59 +537,6 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
       thread model mitigations (e.g., token theft) defined in the
       architecture.
 
-5.  Other Related Efforts
-
-   Outside of the IETF, this proposal aligns with several industry
-   standards for secure workload execution:
-
-   *  *CNCF SPIFFE/SPIRE*: This draft formalizes the application-layer
-      binding for SPIRE's node-to-workload attestation chain.  It
-      ensures that the short-lived SVIDs issued by SPIRE are
-      cryptographically bound to the hardware-rooted residency assertion
-      provided by the SPIRE Agent (acting as the Workload Identity
-      Agent).
-
-
-
-Krishnan, et al.         Expires 28 August 2026                 [Page 8]
-
-Internet-Draft               WIMSE-TRANS-POR               February 2026
-
-
-   *  *Confidential Computing Consortium (CCC)*: Proof of Residency
-      (PoR) provides the cryptographic evidence required for "*Sovereign
-      Workloads*" and "Data-in-Use" protection models.  In Confidential
-      Computing (CC) environments, the hardware itself can generate
-      direct, cryptographically signed quotes (e.g., using AMD SEV-SNP
-      VCEK/VLEK keys).  These quotes typically include two distinct
-      layers of evidence:
-      1.  *Platform Attributes*: Measurements of the processor's
-          identity, microcode version (TCB), and hardware security
-          state.
-      2.  *Workload Measurements*: Measurements of the workload's code/
-          memory image and custom metadata (e.g., via the REPORT_DATA
-          field).
-
-   While these direct quotes provide high-assurance hardware-direct
-   residency, the *Transitive Attestation* model specified in this
-   document acts as the essential *Identity Bridge*. This bridge can
-   manifest in two architectural patterns: 1.  *Agent-Mediated Flow*:
-   Traditional in standard environments where a local Workload Identity
-   Agent (e.g., a SPIRE Agent) performs the local attestation and
-   translation before the workload receives its identity.  2.  *Direct
-   Quoting Flow*: Typical in CC TEEs where the workload performs "Direct
-   Quoting" of the hardware state.  In this pattern, the *transitive
-   mapping* from hardware evidence to application-layer identity (SVID)
-   typically occurs at a remote *Workload Identity Manager (Workload
-   Identity Manager)* (e.g., a SPIRE Server) during the initial
-   credential issuance phase.
-
-   In both patterns, the result is the same: the high-level application
-   identity becomes cryptographically bound to the hardware-rooted
-   residency, ensuring that Verifiers and Relying Parties do not need to
-   implement complex, vendor-specific measurement verification logic for
-   every diverse hardware platform.
-
 6.  Security Considerations
 
    Proof of Residency or Co-location specifically mitigates the "Stolen
@@ -498,16 +551,17 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
    1.  *Locally Attested*: Linked to the local Workload Identity Agent's
        signing interface, typically protected by OS permissions or
        hardware roots.
+   2.  *Context-Specific*: Bound to a fresh, server-provided nonce and a
+       current timestamp.
 
 
 
-Krishnan, et al.         Expires 28 August 2026                 [Page 9]
+
+Krishnan, et al.         Expires 29 August 2026                [Page 10]
 
 Internet-Draft               WIMSE-TRANS-POR               February 2026
 
 
-   2.  *Context-Specific*: Bound to a fresh, server-provided nonce and a
-       current timestamp.
    3.  *Protected*: Access to the Workload Identity Agent's signing
        capability is restricted by local Operating System permissions
        and logical isolation.
@@ -519,11 +573,14 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
    rooted agent (see [[!I-D.lkspa-wimse-verifiable-geo-fence]]) provides
    the highest level of protection against agent cloning and export.
 
-   The security of this model relies on the *Host Management Plane*
-   correctly binding the identity renewal challenge (N_fusion) to a
-   fresh, OOB platform quote (N_platform).  If a verifier accepts a
-   residency proof that is not bound to a fresh hardware quote, the
-   "Silicon-to-Audit" chain is broken.
+   The security of this model relies on the *Workload Identity Agent*
+   correctly providing a fresh assertion bound to the current workload
+   session.  While this document specifies the conveyance of N_fusion,
+   the underlying platform-level freshness—including the binding to
+   hardware-rooted platform nonces (N_platform)—is managed by the
+   associated *RATS Profile* (see [[!I-D.lkspa-wimse-verifiable-geo-
+   fence]]).  If a verifier accepts a residency proof that lacks a fresh
+   agent signature, the "Silicon-to-SVID" chain of trust is compromised.
 
    TBD: Discussion on Workload Identity Agent compromise, nonce entropy
    requirements, and clock skew for timestamp verification.
@@ -556,5 +613,4 @@ Authors' Addresses
 
 
 
-
-Krishnan, et al.         Expires 28 August 2026                [Page 10]
+Krishnan, et al.         Expires 29 August 2026                [Page 11]
