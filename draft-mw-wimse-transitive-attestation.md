@@ -121,7 +121,7 @@ In an mTLS environment, the Proof of Residency (PoR) is bound to the mutually au
 The mTLS-based flow integrates residency verification into the session establishment and validation phase:
 
 1. **Certificate Extensions**: The client (workload) supplies an X.509 certificate during the mTLS handshake containing a custom extension. This extension includes the public key or SVID details of the local Workload Identity Agent (Attester).
-2. **Post-Handshake Nonce**: After the mTLS handshake is successfully completed, the client requests a residency-specific nonce from the **Verifier** (e.g., Relying Party or Relying Party) to ensure anti-replay.
+2. **Post-Handshake Nonce**: After the mTLS handshake is successfully completed, the client requests a residency-specific nonce from the **Verifier** (e.g., Relying Party) to ensure anti-replay.
 3. **Local Attestation Binding**: The client constructs a PoR assertion payload containing:
     - A cryptographic hash of the TLS Exporter value [[RFC5705]].
     - The residency nonce provided by the server.
@@ -185,6 +185,9 @@ To prevent man-in-the-middle (MITM) and replay attacks, the hardware evidence mu
 ### Relying Party Verification Loop
 
 The Relying Party (Verifier) completes the trust loop by performing the following steps:
+
+> [!NOTE]
+> The Relying Party (which may be the Resource Server or an API Gateway/Proxy acting on its behalf) extracts the TLS Exporter value.
 
 1.  **Hardware Verification**: Receives the CC Quote and verifies the hardware signature (proving the code is running in a real TEE).
 2.  **Extractor**: Extracts the TLS Exporter value (or its hash) from the quote's metadata (User Defined Data).

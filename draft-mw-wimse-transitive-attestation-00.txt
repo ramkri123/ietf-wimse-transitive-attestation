@@ -272,8 +272,8 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
        details of the local Workload Identity Agent (Attester).
    2.  *Post-Handshake Nonce*: After the mTLS handshake is successfully
        completed, the client requests a residency-specific nonce from
-       the *Verifier* (e.g., Relying Party or Relying Party) to ensure
-       anti-replay.
+       the *Verifier* (e.g., Relying Party) to ensure anti-replay.
+
 
 
 
@@ -430,16 +430,16 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
    The Relying Party (Verifier) completes the trust loop by performing
    the following steps:
 
+   |  [!NOTE] The Relying Party (which may be the Resource Server or an
+   |  API Gateway/Proxy acting on its behalf) extracts the TLS Exporter
+   |  value.
+
    1.  *Hardware Verification*: Receives the CC Quote and verifies the
        hardware signature (proving the code is running in a real TEE).
    2.  *Extractor*: Extracts the TLS Exporter value (or its hash) from
        the quote's metadata (User Defined Data).
    3.  *Comparison*: Compares this value to its own locally computed TLS
        Exporter value for the current active connection.
-   4.  *Enforcement*: If they match, the Relying Party is certain that
-       the entity it is talking to via TLS is the _exact same entity_
-       that generated the hardware attestation.
-
 
 
 
@@ -449,6 +449,10 @@ Krishnan, et al.         Expires 29 August 2026                 [Page 8]
 
 Internet-Draft               WIMSE-TRANS-POR               February 2026
 
+
+   4.  *Enforcement*: If they match, the Relying Party is certain that
+       the entity it is talking to via TLS is the _exact same entity_
+       that generated the hardware attestation.
 
    This architecture ensures that identity is not just a bearer token,
    but is cryptographically tied to the verified runtime environment and
@@ -493,10 +497,6 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
        to workloads.  It reflects its status as the *Consumer* of
        attestation results to address the *North-South* identity
        portability problem.
-
-
-
-
 
 
 

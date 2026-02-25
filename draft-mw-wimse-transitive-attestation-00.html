@@ -1468,7 +1468,7 @@ li > p:last-of-type:only-child {
               <strong>Certificate Extensions</strong>: The client (workload) supplies an X.509 certificate during the mTLS handshake containing a custom extension. This extension includes the public key or SVID details of the local Workload Identity Agent (Attester).<a href="#section-4.1.1-2.1" class="pilcrow">¶</a>
 </li>
             <li id="section-4.1.1-2.2">
-              <strong>Post-Handshake Nonce</strong>: After the mTLS handshake is successfully completed, the client requests a residency-specific nonce from the <strong>Verifier</strong> (e.g., Relying Party or Relying Party) to ensure anti-replay.<a href="#section-4.1.1-2.2" class="pilcrow">¶</a>
+              <strong>Post-Handshake Nonce</strong>: After the mTLS handshake is successfully completed, the client requests a residency-specific nonce from the <strong>Verifier</strong> (e.g., Relying Party) to ensure anti-replay.<a href="#section-4.1.1-2.2" class="pilcrow">¶</a>
 </li>
             <li id="section-4.1.1-2.3">
               <p id="section-4.1.1-2.3.1"><strong>Local Attestation Binding</strong>: The client constructs a PoR assertion payload containing:<a href="#section-4.1.1-2.3.1" class="pilcrow">¶</a></p>
@@ -1617,21 +1617,25 @@ By binding to the TLS Exporter instead of the application traffic keys, the Proo
 <a href="#section-4.3.3" class="section-number selfRef">4.3.3. </a><a href="#name-relying-party-verification-" class="section-name selfRef">Relying Party Verification Loop</a>
           </h4>
 <p id="section-4.3.3-1">The Relying Party (Verifier) completes the trust loop by performing the following steps:<a href="#section-4.3.3-1" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="compact type-1" id="section-4.3.3-2">
-<li id="section-4.3.3-2.1">
-              <strong>Hardware Verification</strong>: Receives the CC Quote and verifies the hardware signature (proving the code is running in a real TEE).<a href="#section-4.3.3-2.1" class="pilcrow">¶</a>
+<blockquote id="section-4.3.3-2">
+            <p id="section-4.3.3-2.1">[!NOTE]
+The Relying Party (which may be the Resource Server or an API Gateway/Proxy acting on its behalf) extracts the TLS Exporter value.<a href="#section-4.3.3-2.1" class="pilcrow">¶</a></p>
+</blockquote>
+<ol start="1" type="1" class="compact type-1" id="section-4.3.3-3">
+<li id="section-4.3.3-3.1">
+              <strong>Hardware Verification</strong>: Receives the CC Quote and verifies the hardware signature (proving the code is running in a real TEE).<a href="#section-4.3.3-3.1" class="pilcrow">¶</a>
 </li>
-            <li id="section-4.3.3-2.2">
-              <strong>Extractor</strong>: Extracts the TLS Exporter value (or its hash) from the quote's metadata (User Defined Data).<a href="#section-4.3.3-2.2" class="pilcrow">¶</a>
+            <li id="section-4.3.3-3.2">
+              <strong>Extractor</strong>: Extracts the TLS Exporter value (or its hash) from the quote's metadata (User Defined Data).<a href="#section-4.3.3-3.2" class="pilcrow">¶</a>
 </li>
-            <li id="section-4.3.3-2.3">
-              <strong>Comparison</strong>: Compares this value to its own locally computed TLS Exporter value for the current active connection.<a href="#section-4.3.3-2.3" class="pilcrow">¶</a>
+            <li id="section-4.3.3-3.3">
+              <strong>Comparison</strong>: Compares this value to its own locally computed TLS Exporter value for the current active connection.<a href="#section-4.3.3-3.3" class="pilcrow">¶</a>
 </li>
-            <li id="section-4.3.3-2.4">
-              <strong>Enforcement</strong>: If they match, the Relying Party is certain that the entity it is talking to via TLS is the <em>exact same entity</em> that generated the hardware attestation.<a href="#section-4.3.3-2.4" class="pilcrow">¶</a>
+            <li id="section-4.3.3-3.4">
+              <strong>Enforcement</strong>: If they match, the Relying Party is certain that the entity it is talking to via TLS is the <em>exact same entity</em> that generated the hardware attestation.<a href="#section-4.3.3-3.4" class="pilcrow">¶</a>
 </li>
           </ol>
-<p id="section-4.3.3-3">This architecture ensures that identity is not just a bearer token, but is cryptographically tied to the verified runtime environment and the specific communication channel.<a href="#section-4.3.3-3" class="pilcrow">¶</a></p>
+<p id="section-4.3.3-4">This architecture ensures that identity is not just a bearer token, but is cryptographically tied to the verified runtime environment and the specific communication channel.<a href="#section-4.3.3-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>

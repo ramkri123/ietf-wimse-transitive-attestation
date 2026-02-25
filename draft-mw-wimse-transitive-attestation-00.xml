@@ -81,7 +81,7 @@
 
 <ol spacing="compact">
 <li><strong>Certificate Extensions</strong>: The client (workload) supplies an X.509 certificate during the mTLS handshake containing a custom extension. This extension includes the public key or SVID details of the local Workload Identity Agent (Attester).</li>
-<li><strong>Post-Handshake Nonce</strong>: After the mTLS handshake is successfully completed, the client requests a residency-specific nonce from the <strong>Verifier</strong> (e.g., Relying Party or Relying Party) to ensure anti-replay.</li>
+<li><strong>Post-Handshake Nonce</strong>: After the mTLS handshake is successfully completed, the client requests a residency-specific nonce from the <strong>Verifier</strong> (e.g., Relying Party) to ensure anti-replay.</li>
 <li><t><strong>Local Attestation Binding</strong>: The client constructs a PoR assertion payload containing:</t>
 
 <ul spacing="compact">
@@ -164,7 +164,9 @@ By binding to the TLS Exporter instead of the application traffic keys, the Proo
 
 <section anchor="relying-party-verification-loop"><name>Relying Party Verification Loop</name>
 <t>The Relying Party (Verifier) completes the trust loop by performing the following steps:</t>
-
+<blockquote><t>[!NOTE]
+The Relying Party (which may be the Resource Server or an API Gateway/Proxy acting on its behalf) extracts the TLS Exporter value.</t>
+</blockquote>
 <ol spacing="compact">
 <li><strong>Hardware Verification</strong>: Receives the CC Quote and verifies the hardware signature (proving the code is running in a real TEE).</li>
 <li><strong>Extractor</strong>: Extracts the TLS Exporter value (or its hash) from the quote's metadata (User Defined Data).</li>
