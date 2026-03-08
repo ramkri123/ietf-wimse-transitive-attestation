@@ -46,7 +46,7 @@ organization = "Aryaka"
   email = "srinivasa.addepalli@aryaka.com"
 
 
-[[contributor]]
+{{contributor}}
 initials = "B."
 surname = "Malepati"
 fullname = "Bala Siva Sai Akhil Malepati"
@@ -58,30 +58,30 @@ organization = "Independent"
 
 .# Abstract
 
-This document defines a **WIMSE Profile** for Transitive Attestation within the Workload Identity in Multi-Service Environments (WIMSE) framework. It addresses the critical problem of **Identity Portability**, where software credentials (e.g., bearer tokens or keys) can be misappropriated and used from unauthorized environments—a risk amplified by the emergence of autonomous **AI Agents** that may move across jurisdictions or be hijacked via **prompt injection attacks**. By providing a standardized **Identity Conveyance** mechanism, this profile cryptographically binds software workloads to their local execution environment ("Proof of Residency") through a transitive chain of trust. This chain consumes **Evidence** from the underlying platform—supporting both **high-assurance** RATS-based profiles (e.g., [[!I-D.lkspa-wimse-verifiable-geo-fence]]) for residency verification and **standard** Workload Identity Agents for basic co-location proofs—to ensure that an identity is only valid when used from a verified, integral, or geographically compliant host. The integrity and hardware-rooted security of the Workload Identity Agent itself is considered out-of-scope for this document and is addressed in the **Verifiable Geofencing** profile [[!I-D.lkspa-wimse-verifiable-geo-fence]].
+This document defines a **WIMSE Profile** for Transitive Attestation within the Workload Identity in Multi-Service Environments (WIMSE) framework. It addresses the critical problem of **Identity Portability**, where software credentials (e.g., bearer tokens or keys) can be misappropriated and used from unauthorized environments—a risk amplified by the emergence of autonomous **AI Agents** that may move across jurisdictions or be hijacked via **prompt injection attacks**. By providing a standardized **Identity Conveyance** mechanism, this profile cryptographically binds software workloads to their local execution environment ("Proof of Residency") through a transitive chain of trust. This chain consumes **Evidence** from the underlying platform—supporting both **high-assurance** RATS-based profiles (e.g., {{!I-D.lkspa-wimse-verifiable-geo-fence}}) for residency verification and **standard** Workload Identity Agents for basic co-location proofs—to ensure that an identity is only valid when used from a verified, integral, or geographically compliant host. The integrity and hardware-rooted security of the Workload Identity Agent itself is considered out-of-scope for this document and is addressed in the **Verifiable Geofencing** profile {{!I-D.lkspa-wimse-verifiable-geo-fence}}.
 
 {mainmatter}
 
 # Introduction
 
-This document defines the **WIMSE Profile** for "Transitive Attestation", addressing a critical technical gap in the high-level **WIMSE Architecture** [[!I-D.ietf-wimse-arch]] regarding how platform-level trust is transitively extended to software workloads. 
+This document defines the **WIMSE Profile** for "Transitive Attestation", addressing a critical technical gap in the high-level **WIMSE Architecture** {{!I-D.ietf-wimse-arch}} regarding how platform-level trust is transitively extended to software workloads. 
 
 Currently, workload identities are often "context-agnostic"—once a credential (e.g., a bearer token) is issued, it can often be used from any environment. This **Identity Portability** allows an attacker who steals a token in one jurisdiction to use it from another, representing a significant **Sovereignty Violation** for workloads legally required to operate within specific boundaries. This is particularly critical for **AI Agents**, whose autonomous nature, susceptibility to hijacking via **prompt injection attacks**, and potential for rapid migration across cloud environments require strict, verifiable adherence to data residency and host integrity policies.
 
 By addressing the **North-South** security axis of a workload's relationship with its local hosting environment, this profile establishes a **"Silicon-to-SVID"** chain of accountability. It ensures that the Workload Identity Agent (the local agent) is empowered to issue identities that are cryptographically bound to a verified execution context. This mechanism is flexible across assurance levels: it supports **High Assurance** residency verification rooted in hardware evidence (e.g., TPM/TEE), as well as **Standard Assurance** local co-location proofs provided by conventional workload agents.
 
-This draft acts as the **Conveyance Layer** that integrates with the findings of a **RATS Profile** (such as **Verifiable Geofencing** [[!I-D.lkspa-wimse-verifiable-geo-fence]]) to establish two distinct levels of assurance:
+This draft acts as the **Conveyance Layer** that integrates with the findings of a **RATS Profile** (such as **Verifiable Geofencing** {{!I-D.lkspa-wimse-verifiable-geo-fence}}) to establish two distinct levels of assurance:
 
 *   **Co-location Verification**: A logical binding that ensures the workload and its agent are currently co-located on the same host, typically enforced via operating system isolation and local communication channels (e.g., Unix Domain Sockets).
 *   **Residency Verification (High Assurance)**: A high-assurance binding where the Workload Identity Agent itself is proven to be integral and rooted in hardware. This ensures the identity is functionally "sticky" to the verified residence via a **Fast Path** renewal which uses cached attestation results.
 
-A workload obtains a fresh signature or proof from a local Workload Identity Agent, typically utilizing a **Workload Fusion Nonce (N_fusion)** to prevent replay. This ensures the identity—and the usage of its associated credentials—is sensitive to the physical or logical residence of the workload, complementing the "East-West" delegation models. Re-attestation follows a **Tiered Schedule** (see [[!I-D.lkspa-wimse-verifiable-geo-fence]]), separating frequent identity renewal from heavyweight platform evidence collection.
+A workload obtains a fresh signature or proof from a local Workload Identity Agent, typically utilizing a **Workload Fusion Nonce (N_fusion)** to prevent replay. This ensures the identity—and the usage of its associated credentials—is sensitive to the physical or logical residence of the workload, complementing the "East-West" delegation models. Re-attestation follows a **Tiered Schedule** (see {{!I-D.lkspa-wimse-verifiable-geo-fence}}), separating frequent identity renewal from heavyweight platform evidence collection.
 
 # Terminology
 
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 [[RFC2119]] [[RFC8174]] when, and only when, they appear in all capitals, as shown here.
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 {{!RFC2119}} {{!RFC8174}} when, and only when, they appear in all capitals, as shown here.
 
-This document leverages the terminology defined in the RATS Architecture [[RFC9334]] and the WIMSE Architecture [[!I-D.ietf-wimse-arch]].
+This document leverages the terminology defined in the RATS Architecture {{!RFC9334}} and the WIMSE Architecture {{!I-D.ietf-wimse-arch}}.
 
 Workload Identity Agent (Workload Identity Agent):
 : A local entity that acts as an **Attester** or **Attestation Intermediate** in the RATS framework. It is responsible for providing Evidence or Attestation Results to a workload.
@@ -106,7 +106,7 @@ The following areas are explicitly **OUT OF SCOPE** for this profile:
 *   **Platform Attestation**: The collection and verification of hardware-level evidence (TPM quotes, TEE measurements) for the host platform.
 *   **Workload Identity Manager Interactions**: The specific protocols and APIs for obtaining nonces or credentials from a **Workload Identity Manager (WIM Manager)** during the issuance phase (e.g., SVID CSRs).
 
-These security guarantees are provided by the underlying **RATS Profile** for **Verifiable Geofencing** [[!I-D.lkspa-wimse-verifiable-geo-fence]]. This WIMSE profile assumes that the Workload Identity Agent is operating in a verified, integral state as established by the Geofencing layer.
+These security guarantees are provided by the underlying **RATS Profile** for **Verifiable Geofencing** {{!I-D.lkspa-wimse-verifiable-geo-fence}}. This WIMSE profile assumes that the Workload Identity Agent is operating in a verified, integral state as established by the Geofencing layer.
 
 # The Solution: Transitive Attestation for Proof of Residency
 
@@ -123,7 +123,7 @@ The mTLS-based flow integrates residency verification into the session establish
 1. **Certificate Extensions**: The client (workload) supplies an X.509 certificate during the mTLS handshake containing a custom extension. This extension includes the public key or SVID details of the local Workload Identity Agent (Attester).
 2. **Post-Handshake Nonce**: After the mTLS handshake is successfully completed, the client requests a residency-specific nonce from the **Verifier** (e.g., Relying Party) to ensure anti-replay.
 3. **Local Attestation Binding**: The client constructs a PoR assertion payload containing:
-    - A cryptographic hash of the TLS Exporter value [[RFC5705]].
+    - A cryptographic hash of the TLS Exporter value {{!RFC5705}}.
     - The residency nonce provided by the server.
     - A timestamp representing the current time of assertion creation.
 <br>
@@ -142,7 +142,7 @@ Upon successful verification, the resource server has proof that the client iden
 
 ## Demonstrating Proof of Residency (DPoR)
 
-"Demonstrating Proof of Residency" (DPoR) is an enhancement to the Demonstrating Proof-of-Possession (DPoP) mechanism defined in [[RFC9449]]. While DPoP ensures *possession* of a private key held by the client, DPoR ensures the physical or logical *residency* of the workload using that key by binding the request to a local attestation.
+"Demonstrating Proof of Residency" (DPoR) is an enhancement to the Demonstrating Proof-of-Possession (DPoP) mechanism defined in {{!RFC9449}}. While DPoP ensures *possession* of a private key held by the client, DPoR ensures the physical or logical *residency* of the workload using that key by binding the request to a local attestation.
 
 ### DPoR Protocol Flow
 
@@ -156,7 +156,7 @@ The DPoR flow integrates residency verification into the per-request application
 3. **Agent Signature**: The client sends this payload to the local Workload Identity Agent (typically via a Unix Domain Socket). The Workload Identity Agent (acting as an Attester) verifies the local execution context and signs the payload with its private key.
 4. **DPoR Assertion Submission**: The client includes the resulting signature in a `DPoR` header or as an extension to the `DPoP` JWT.
 5. **Server Verification**: The **Verifier** performs a joint verification of possession and residency:
-    - **Possession**: Verifies the DPoP proof as per [[RFC9449]].
+    - **Possession**: Verifies the DPoP proof as per {{!RFC9449}}.
     - **Residency**: Verifies the DPoR assertion signature against the Workload Identity Agent public key.
     - **Binding and Freshness**: Ensures that the `jkt` (DPoP key thumbprint), the nonce, and the timestamp in the residency proof match the current request and are within an acceptable freshness window.
 
@@ -172,11 +172,11 @@ In a Transitive Attestation model, trust is passed through a chain of components
 
 *   **Hardware Layer**: A Confidential Computing environment (e.g., Intel TDX or SGX) provides a "Hardware Root of Trust."
 *   **Intermediate Layer (Workload Identity Agent)**: In this profile, the Workload Identity Agent (e.g., a SPIRE Agent) is treated as the trusted software component that "vouches" for the workloads. 
-*   **Logical Equivalent**: By running the Workload Identity Agent inside a TEE (Trusted Execution Environment), the hardware can attest to the integrity of the agent. This allows the agent to act as a "Compliance Bridge" as defined in [[!I-D.lkspa-wimse-verifiable-geo-fence]]. Just as a hardware **Quoting Enclave (QE)** signs a local report to turn it into a globally verifiable "Quote," the Workload Identity Agent (running in a TEE) signs Workload Identity Documents (SVIDs/WITs). Effectively, the agent becomes a *logical* quoting enclave that bridges hardware-rooted trust to software-level workload identities.
+*   **Logical Equivalent**: By running the Workload Identity Agent inside a TEE (Trusted Execution Environment), the hardware can attest to the integrity of the agent. This allows the agent to act as a "Compliance Bridge" as defined in {{!I-D.lkspa-wimse-verifiable-geo-fence}}. Just as a hardware **Quoting Enclave (QE)** signs a local report to turn it into a globally verifiable "Quote," the Workload Identity Agent (running in a TEE) signs Workload Identity Documents (SVIDs/WITs). Effectively, the agent becomes a *logical* quoting enclave that bridges hardware-rooted trust to software-level workload identities.
 
 ### Channel Binding via TLS Exporter
 
-To prevent man-in-the-middle (MITM) and replay attacks, the hardware evidence must be cryptographically bound to the communication channel. This is achieved using the **TLS Exporter** [[RFC5705]].
+To prevent man-in-the-middle (MITM) and replay attacks, the hardware evidence must be cryptographically bound to the communication channel. This is achieved using the **TLS Exporter** {{!RFC5705}}.
 
 *   **The Mechanism**: RFC 5705 allows both sides of a TLS session to derive a unique, secret value (the Exporter) that is bound to that specific handshake.
 *   **The Binding**: The workload places a hash of this TLS Exporter value into the **User Defined Data** field of the CC quote (e.g., `ReportData` in SGX or `RTMR` in TDX). 
@@ -203,18 +203,18 @@ This architecture ensures that identity is not just a bearer token, but is crypt
 | **Layer 1** | **Transitive Attestation** | **WIMSE** | **Conveyance**: Binds identity to the local agent (Co-location/Residency). |
 | **Layer 2** | **Verifiable Geofencing** | **RATS** | **Platform Evidence**: Verifies host integrity and Workload Identity Agent hardware residency (TPM). |
 | **Layer 3** | **Verifiable Geofencing** | **RATS** | **Location Evidence**: Verifies physical geography (GNSS/ZKP). |
-| **Delegation** | **Actor Chain** | **SPICE** | Provides **East-West** identity delegation proof [[!I-D.draft-mw-spice-actor-chain]]. |
+| **Delegation** | **Actor Chain** | **SPICE** | Provides **East-West** identity delegation proof {{!I-D.draft-mw-spice-actor-chain}}. |
 | **Shield** | **SPICE** | **SPICE** | Employs Selective Disclosure (SD-CWT) to protect residency/geographic privacy. |
 
 1.  **Transitive Attestation (WIMSE) - Layer 1 (Conveyance)**: This document act as the technical integrator profile for WIMSE. It standardizes how local context results are transitively extended to workloads. It reflects its status as the **Consumer** of attestation results to address the **North-South** identity portability problem.
-2.  **Verifiable Geofencing (RATS) - Layer 2 & 3 (Evidence)**: Defined in [[!I-D.lkspa-wimse-verifiable-geo-fence]]. This document acts as the **RATS Profile** that provides the hardware-rooted foundation (TPM, Silicon Root of Trust, GNSS) and the out-of-band monitoring required to verify the Workload Identity Agent itself. It generates the high-assurance evidence that Layer 1 consumes.
-3.  **Actor Chain - The Delegation**: Complements this draft by addressing the **East-West** axis of agent-to-agent communication [[!I-D.draft-mw-spice-actor-chain]]. While Transitive Attestation proves *where* an actor is running (North-South), the Actor Chain proves *who* called whom across the network (East-West).
+2.  **Verifiable Geofencing (RATS) - Layer 2 & 3 (Evidence)**: Defined in {{!I-D.lkspa-wimse-verifiable-geo-fence}}. This document acts as the **RATS Profile** that provides the hardware-rooted foundation (TPM, Silicon Root of Trust, GNSS) and the out-of-band monitoring required to verify the Workload Identity Agent itself. It generates the high-assurance evidence that Layer 1 consumes.
+3.  **Actor Chain - The Delegation**: Complements this draft by addressing the **East-West** axis of agent-to-agent communication {{!I-D.draft-mw-spice-actor-chain}}. While Transitive Attestation proves *where* an actor is running (North-South), the Actor Chain proves *who* called whom across the network (East-West).
 4.  **SPICE (Secure Patterns for Internet Credential Exchange) - The Shield**: Utilizes Selective Disclosure (SD-CWT) to protect sensitive location data. It allows a workload to prove residency within a broad "Sovereign Zone" without revealing precise GPS coordinates, balancing security with privacy.
 
 Additional relationships include:
 
-*   **Verifiable Geofencing [[!I-D.lkspa-wimse-verifiable-geo-fence]]**: Provides the normative technical specification for Layer 2 and Layer 3 attestation. This draft (Transitive Attestation) acts as the application-layer profile that implements these residency proofs within mTLS and DPoP flows, fulfilling the "Silicon-to-SVID" chain.
-*   **WIMSE Architecture [[!I-D.ietf-wimse-arch]]**: This draft provides the technical fulfillment for the secure agent requirements and thread model mitigations (e.g., token theft) defined in the architecture.
+*   **Verifiable Geofencing {{!I-D.lkspa-wimse-verifiable-geo-fence}}**: Provides the normative technical specification for Layer 2 and Layer 3 attestation. This draft (Transitive Attestation) acts as the application-layer profile that implements these residency proofs within mTLS and DPoP flows, fulfilling the "Silicon-to-SVID" chain.
+*   **WIMSE Architecture {{!I-D.ietf-wimse-arch}}**: This draft provides the technical fulfillment for the secure agent requirements and thread model mitigations (e.g., token theft) defined in the architecture.
 
 
 
@@ -228,9 +228,9 @@ An attacker who steals a private key or intercepts an active token from a worklo
 2.  **Context-Specific**: Bound to a fresh, server-provided nonce and a current timestamp.
 3.  **Protected**: Access to the Workload Identity Agent's signing capability is restricted by local Operating System permissions and logical isolation.
 
-Consequently, credentials become functionally "sticky" to the verified residence; an attacker cannot generate a valid proof without achieving a compromise of the identity agent itself. While a software-based agent provides strong logical isolation, a hardware-rooted agent (see [[!I-D.lkspa-wimse-verifiable-geo-fence]]) provides the highest level of protection against agent cloning and export. 
+Consequently, credentials become functionally "sticky" to the verified residence; an attacker cannot generate a valid proof without achieving a compromise of the identity agent itself. While a software-based agent provides strong logical isolation, a hardware-rooted agent (see {{!I-D.lkspa-wimse-verifiable-geo-fence}}) provides the highest level of protection against agent cloning and export. 
 
-The security of this model relies on the **Workload Identity Agent** correctly providing a fresh assertion bound to the current workload session. While this document specifies the conveyance of `N_fusion`, the underlying platform-level freshness—including the binding to hardware-rooted platform nonces (`N_platform`)—is managed by the associated **RATS Profile** (see [[!I-D.lkspa-wimse-verifiable-geo-fence]]). If a verifier accepts a residency proof that lacks a fresh agent signature, the "Silicon-to-SVID" chain of trust is compromised.
+The security of this model relies on the **Workload Identity Agent** correctly providing a fresh assertion bound to the current workload session. While this document specifies the conveyance of `N_fusion`, the underlying platform-level freshness—including the binding to hardware-rooted platform nonces (`N_platform`)—is managed by the associated **RATS Profile** (see {{!I-D.lkspa-wimse-verifiable-geo-fence}}). If a verifier accepts a residency proof that lacks a fresh agent signature, the "Silicon-to-SVID" chain of trust is compromised.
 
 TBD: Discussion on Workload Identity Agent compromise, nonce entropy requirements, and clock skew for timestamp verification.
 
