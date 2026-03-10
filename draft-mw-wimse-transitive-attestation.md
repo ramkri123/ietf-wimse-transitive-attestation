@@ -7,10 +7,12 @@ ipr = "trust200902"
 area = "Security"
 workgroup = "WIMSE"
 keyword = ["attestation", "wimse", "transitive", "workload identity", "residency"]
+date = 2026-03-10
 
 [seriesInfo]
 name = "Internet-Draft"
 value = "draft-mw-wimse-transitive-attestation-00"
+stream = "IETF"
 status = "informational"
 
 [[author]]
@@ -46,7 +48,7 @@ organization = "Aryaka"
   email = "srinivasa.addepalli@aryaka.com"
 
 
-{{contributor}}
+[[contributor]]
 initials = "B."
 surname = "Malepati"
 fullname = "Bala Siva Sai Akhil Malepati"

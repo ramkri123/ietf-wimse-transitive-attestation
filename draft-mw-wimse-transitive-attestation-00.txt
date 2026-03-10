@@ -5,12 +5,12 @@
 WIMSE                                                        R. Krishnan
 Internet-Draft                                       JPMorgan Chase & Co
 Intended status: Informational                                 A. Prasad
-Expires: 29 August 2026                                           Oracle
+Expires: 11 September 2026                                        Oracle
                                                                 D. Lopez
                                                               Telefonica
                                                             S. Addepalli
                                                                   Aryaka
-                                                        25 February 2026
+                                                           10 March 2026
 
 
     Transitive Attestation for Sovereign Workloads: A WIMSE Profile
@@ -30,14 +30,14 @@ Abstract
    their local execution environment ("Proof of Residency") through a
    transitive chain of trust.  This chain consumes *Evidence* from the
    underlying platform—supporting both *high-assurance* RATS-based
-   profiles (e.g., [[!I-D.lkspa-wimse-verifiable-geo-fence]]) for
+   profiles (e.g., {{!I-D.lkspa-wimse-verifiable-geo-fence}}) for
    residency verification and *standard* Workload Identity Agents for
    basic co-location proofs—to ensure that an identity is only valid
    when used from a verified, integral, or geographically compliant
    host.  The integrity and hardware-rooted security of the Workload
    Identity Agent itself is considered out-of-scope for this document
-   and is addressed in the *Verifiable Geofencing* profile [[!I-D.lkspa-
-   wimse-verifiable-geo-fence]].
+   and is addressed in the *Verifiable Geofencing* profile {{!I-D.lkspa-
+   wimse-verifiable-geo-fence}}.
 
 Status of This Memo
 
@@ -53,9 +53,9 @@ Status of This Memo
 
 
 
-Krishnan, et al.         Expires 29 August 2026                 [Page 1]
+Krishnan, et al.        Expires 11 September 2026               [Page 1]
 
-Internet-Draft               WIMSE-TRANS-POR               February 2026
+Internet-Draft               WIMSE-TRANS-POR                  March 2026
 
 
    Internet-Drafts are draft documents valid for a maximum of six months
@@ -63,7 +63,7 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 29 August 2026.
+   This Internet-Draft will expire on 11 September 2026.
 
 Copyright Notice
 
@@ -103,15 +103,15 @@ Table of Contents
 
    This document defines the *WIMSE Profile* for "Transitive
    Attestation", addressing a critical technical gap in the high-level
-   *WIMSE Architecture* [[!I-D.ietf-wimse-arch]] regarding how platform-
+   *WIMSE Architecture* {{!I-D.ietf-wimse-arch}} regarding how platform-
    level trust is transitively extended to software workloads.
 
 
 
 
-Krishnan, et al.         Expires 29 August 2026                 [Page 2]
+Krishnan, et al.        Expires 11 September 2026               [Page 2]
 
-Internet-Draft               WIMSE-TRANS-POR               February 2026
+Internet-Draft               WIMSE-TRANS-POR                  March 2026
 
 
    Currently, workload identities are often "context-agnostic"—once a
@@ -138,8 +138,8 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
    agents.
 
    This draft acts as the *Conveyance Layer* that integrates with the
-   findings of a *RATS Profile* (such as *Verifiable Geofencing* [[!I-
-   D.lkspa-wimse-verifiable-geo-fence]]) to establish two distinct
+   findings of a *RATS Profile* (such as *Verifiable Geofencing* {{!I-
+   D.lkspa-wimse-verifiable-geo-fence}}) to establish two distinct
    levels of assurance:
 
    *  *Co-location Verification*: A logical binding that ensures the
@@ -158,16 +158,16 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
    usage of its associated credentials—is sensitive to the physical or
    logical residence of the workload, complementing the "East-West"
    delegation models.  Re-attestation follows a *Tiered Schedule* (see
-   [[!I-D.lkspa-wimse-verifiable-geo-fence]]), separating frequent
+   {{!I-D.lkspa-wimse-verifiable-geo-fence}}), separating frequent
    identity renewal from heavyweight platform evidence collection.
 
 
 
 
 
-Krishnan, et al.         Expires 29 August 2026                 [Page 3]
+Krishnan, et al.        Expires 11 September 2026               [Page 3]
 
-Internet-Draft               WIMSE-TRANS-POR               February 2026
+Internet-Draft               WIMSE-TRANS-POR                  March 2026
 
 
 2.  Terminology
@@ -175,12 +175,12 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
    "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
    "OPTIONAL" in this document are to be interpreted as described in BCP
-   14 [[RFC2119]] [[RFC8174]] when, and only when, they appear in all
+   14 {{!RFC2119}} {{!RFC8174}} when, and only when, they appear in all
    capitals, as shown here.
 
    This document leverages the terminology defined in the RATS
-   Architecture [[RFC9334]] and the WIMSE Architecture [[!I-D.ietf-
-   wimse-arch]].
+   Architecture {{!RFC9334}} and the WIMSE Architecture {{!I-D.ietf-
+   wimse-arch}}.
 
    Workload Identity Agent (Workload Identity Agent):  A local entity
       that acts as an *Attester* or *Attestation Intermediate* in the
@@ -221,9 +221,9 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
 
 
 
-Krishnan, et al.         Expires 29 August 2026                 [Page 4]
+Krishnan, et al.        Expires 11 September 2026               [Page 4]
 
-Internet-Draft               WIMSE-TRANS-POR               February 2026
+Internet-Draft               WIMSE-TRANS-POR                  March 2026
 
 
    The following areas are explicitly *OUT OF SCOPE* for this profile:
@@ -240,8 +240,8 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
       SVID CSRs).
 
    These security guarantees are provided by the underlying *RATS
-   Profile* for *Verifiable Geofencing* [[!I-D.lkspa-wimse-verifiable-
-   geo-fence]].  This WIMSE profile assumes that the Workload Identity
+   Profile* for *Verifiable Geofencing* {{!I-D.lkspa-wimse-verifiable-
+   geo-fence}}. This WIMSE profile assumes that the Workload Identity
    Agent is operating in a verified, integral state as established by
    the Geofencing layer.
 
@@ -277,14 +277,14 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
 
 
 
-Krishnan, et al.         Expires 29 August 2026                 [Page 5]
+Krishnan, et al.        Expires 11 September 2026               [Page 5]
 
-Internet-Draft               WIMSE-TRANS-POR               February 2026
+Internet-Draft               WIMSE-TRANS-POR                  March 2026
 
 
    3.  *Local Attestation Binding*: The client constructs a PoR
        assertion payload containing:
-       *  A cryptographic hash of the TLS Exporter value [[RFC5705]].
+       *  A cryptographic hash of the TLS Exporter value {{!RFC5705}}.
        *  The residency nonce provided by the server.
        *  A timestamp representing the current time of assertion
           creation.
@@ -321,7 +321,7 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
 
    "Demonstrating Proof of Residency" (DPoR) is an enhancement to the
    Demonstrating Proof-of-Possession (DPoP) mechanism defined in
-   [[RFC9449]].  While DPoP ensures _possession_ of a private key held
+   {{!RFC9449}}. While DPoP ensures _possession_ of a private key held
    by the client, DPoR ensures the physical or logical _residency_ of
    the workload using that key by binding the request to a local
    attestation.
@@ -333,9 +333,9 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
 
 
 
-Krishnan, et al.         Expires 29 August 2026                 [Page 6]
+Krishnan, et al.        Expires 11 September 2026               [Page 6]
 
-Internet-Draft               WIMSE-TRANS-POR               February 2026
+Internet-Draft               WIMSE-TRANS-POR                  March 2026
 
 
    1.  *Nonced Request*: The *Verifier* SHOULD provide a residency-
@@ -357,7 +357,7 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
        signature in a DPoR header or as an extension to the DPoP JWT.
    5.  *Server Verification*: The *Verifier* performs a joint
        verification of possession and residency:
-       *  *Possession*: Verifies the DPoP proof as per [[RFC9449]].
+       *  *Possession*: Verifies the DPoP proof as per {{!RFC9449}}.
        *  *Residency*: Verifies the DPoR assertion signature against the
           Workload Identity Agent public key.
        *  *Binding and Freshness*: Ensures that the jkt (DPoP key
@@ -389,9 +389,9 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
 
 
 
-Krishnan, et al.         Expires 29 August 2026                 [Page 7]
+Krishnan, et al.        Expires 11 September 2026               [Page 7]
 
-Internet-Draft               WIMSE-TRANS-POR               February 2026
+Internet-Draft               WIMSE-TRANS-POR                  March 2026
 
 
    *  *Intermediate Layer (Workload Identity Agent)*: In this profile,
@@ -400,8 +400,8 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
    *  *Logical Equivalent*: By running the Workload Identity Agent
       inside a TEE (Trusted Execution Environment), the hardware can
       attest to the integrity of the agent.  This allows the agent to
-      act as a "Compliance Bridge" as defined in [[!I-D.lkspa-wimse-
-      verifiable-geo-fence]].  Just as a hardware *Quoting Enclave (QE)*
+      act as a "Compliance Bridge" as defined in {{!I-D.lkspa-wimse-
+      verifiable-geo-fence}}. Just as a hardware *Quoting Enclave (QE)*
       signs a local report to turn it into a globally verifiable
       "Quote," the Workload Identity Agent (running in a TEE) signs
       Workload Identity Documents (SVIDs/WITs).  Effectively, the agent
@@ -412,7 +412,7 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
 
    To prevent man-in-the-middle (MITM) and replay attacks, the hardware
    evidence must be cryptographically bound to the communication
-   channel.  This is achieved using the *TLS Exporter* [[RFC5705]].
+   channel.  This is achieved using the *TLS Exporter* {{!RFC5705}}.
 
    *  *The Mechanism*: RFC 5705 allows both sides of a TLS session to
       derive a unique, secret value (the Exporter) that is bound to that
@@ -445,9 +445,9 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
 
 
 
-Krishnan, et al.         Expires 29 August 2026                 [Page 8]
+Krishnan, et al.        Expires 11 September 2026               [Page 8]
 
-Internet-Draft               WIMSE-TRANS-POR               February 2026
+Internet-Draft               WIMSE-TRANS-POR                  March 2026
 
 
    4.  *Enforcement*: If they match, the Relying Party is certain that
@@ -480,8 +480,8 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
     +--------------+--------------+---------+-------------------------+
     | *Delegation* | *Actor       | *SPICE* | Provides *East-West*    |
     |              | Chain*       |         | identity delegation     |
-    |              |              |         | proof [[!I-D.draft-mw-  |
-    |              |              |         | spice-actor-chain]].    |
+    |              |              |         | proof {{!I-D.draft-mw-  |
+    |              |              |         | spice-actor-chain}}.    |
     +--------------+--------------+---------+-------------------------+
     | *Shield*     | *SPICE*      | *SPICE* | Employs Selective       |
     |              |              |         | Disclosure (SD-CWT) to  |
@@ -501,23 +501,22 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
 
 
 
-Krishnan, et al.         Expires 29 August 2026                 [Page 9]
+Krishnan, et al.        Expires 11 September 2026               [Page 9]
 
-Internet-Draft               WIMSE-TRANS-POR               February 2026
+Internet-Draft               WIMSE-TRANS-POR                  March 2026
 
 
    2.  *Verifiable Geofencing (RATS) - Layer 2 & 3 (Evidence)*: Defined
-       in [[!I-D.lkspa-wimse-verifiable-geo-fence]].  This document acts
+       in {{!I-D.lkspa-wimse-verifiable-geo-fence}}. This document acts
        as the *RATS Profile* that provides the hardware-rooted
        foundation (TPM, Silicon Root of Trust, GNSS) and the out-of-band
        monitoring required to verify the Workload Identity Agent itself.
        It generates the high-assurance evidence that Layer 1 consumes.
    3.  *Actor Chain - The Delegation*: Complements this draft by
        addressing the *East-West* axis of agent-to-agent communication
-       [[!I-D.draft-mw-spice-actor-chain]].  While Transitive
-       Attestation proves _where_ an actor is running (North-South), the
-       Actor Chain proves _who_ called whom across the network (East-
-       West).
+       {{!I-D.draft-mw-spice-actor-chain}}. While Transitive Attestation
+       proves _where_ an actor is running (North-South), the Actor Chain
+       proves _who_ called whom across the network (East-West).
    4.  *SPICE (Secure Patterns for Internet Credential Exchange) - The
        Shield*: Utilizes Selective Disclosure (SD-CWT) to protect
        sensitive location data.  It allows a workload to prove residency
@@ -526,13 +525,13 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
 
    Additional relationships include:
 
-   *  *Verifiable Geofencing [[!I-D.lkspa-wimse-verifiable-geo-fence]]*:
+   *  *Verifiable Geofencing {{!I-D.lkspa-wimse-verifiable-geo-fence}}*:
       Provides the normative technical specification for Layer 2 and
       Layer 3 attestation.  This draft (Transitive Attestation) acts as
       the application-layer profile that implements these residency
       proofs within mTLS and DPoP flows, fulfilling the "Silicon-to-
       SVID" chain.
-   *  *WIMSE Architecture [[!I-D.ietf-wimse-arch]]*: This draft provides
+   *  *WIMSE Architecture {{!I-D.ietf-wimse-arch}}*: This draft provides
       the technical fulfillment for the secure agent requirements and
       thread model mitigations (e.g., token theft) defined in the
       architecture.
@@ -557,9 +556,10 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
 
 
 
-Krishnan, et al.         Expires 29 August 2026                [Page 10]
+
+Krishnan, et al.        Expires 11 September 2026              [Page 10]
 
-Internet-Draft               WIMSE-TRANS-POR               February 2026
+Internet-Draft               WIMSE-TRANS-POR                  March 2026
 
 
    3.  *Protected*: Access to the Workload Identity Agent's signing
@@ -570,7 +570,7 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
    verified residence; an attacker cannot generate a valid proof without
    achieving a compromise of the identity agent itself.  While a
    software-based agent provides strong logical isolation, a hardware-
-   rooted agent (see [[!I-D.lkspa-wimse-verifiable-geo-fence]]) provides
+   rooted agent (see {{!I-D.lkspa-wimse-verifiable-geo-fence}}) provides
    the highest level of protection against agent cloning and export.
 
    The security of this model relies on the *Workload Identity Agent*
@@ -578,8 +578,8 @@ Internet-Draft               WIMSE-TRANS-POR               February 2026
    session.  While this document specifies the conveyance of N_fusion,
    the underlying platform-level freshness—including the binding to
    hardware-rooted platform nonces (N_platform)—is managed by the
-   associated *RATS Profile* (see [[!I-D.lkspa-wimse-verifiable-geo-
-   fence]]).  If a verifier accepts a residency proof that lacks a fresh
+   associated *RATS Profile* (see {{!I-D.lkspa-wimse-verifiable-geo-
+   fence}}).  If a verifier accepts a residency proof that lacks a fresh
    agent signature, the "Silicon-to-SVID" chain of trust is compromised.
 
    TBD: Discussion on Workload Identity Agent compromise, nonce entropy
@@ -613,4 +613,4 @@ Authors' Addresses
 
 
 
-Krishnan, et al.         Expires 29 August 2026                [Page 11]
+Krishnan, et al.        Expires 11 September 2026              [Page 11]

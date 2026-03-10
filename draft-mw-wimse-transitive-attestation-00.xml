@@ -1,12 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- name="GENERATOR" content="github.com/mmarkdown/mmark Mmark Markdown Processor - mmark.miek.nl" -->
-<rfc version="3" ipr="trust200902" submissionType="IETF" xml:lang="en" xmlns:xi="http://www.w3.org/2001/XInclude" indexInclude="true">
+<rfc version="3" ipr="trust200902" docName="draft-mw-wimse-transitive-attestation-00" submissionType="IETF" category="info" xml:lang="en" xmlns:xi="http://www.w3.org/2001/XInclude" indexInclude="true">
 
 <front>
-<title></title><seriesInfo></seriesInfo>
-<date/>
-<area>Internet</area>
-<workgroup></workgroup>
+<title abbrev="WIMSE-TRANS-POR">Transitive Attestation for Sovereign Workloads: A WIMSE Profile</title><seriesInfo value="draft-mw-wimse-transitive-attestation-00" stream="IETF" status="informational" name="Internet-Draft"></seriesInfo>
+<author initials="R." surname="Krishnan" fullname="Ram Krishnan"><organization>JPMorgan Chase &amp; Co</organization><address><postal><street></street>
+</postal><email>ramkri123@gmail.com</email>
+</address></author><author initials="A." surname="Prasad" fullname="A Prasad"><organization>Oracle</organization><address><postal><street></street>
+</postal><email>a.prasad@oracle.com</email>
+</address></author><author initials="D." surname="Lopez" fullname="Diego R. Lopez"><organization>Telefonica</organization><address><postal><street></street>
+</postal><email>diego.r.lopez@telefonica.com</email>
+</address></author><author initials="S." surname="Addepalli" fullname="Srinivasa Addepalli"><organization>Aryaka</organization><address><postal><street></street>
+</postal><email>srinivasa.addepalli@aryaka.com</email>
+</address></author><date year="2026" month="March" day="10"></date>
+<area>Security</area>
+<workgroup>WIMSE</workgroup>
+<keyword>attestation</keyword>
+<keyword>wimse</keyword>
+<keyword>transitive</keyword>
+<keyword>workload identity</keyword>
+<keyword>residency</keyword>
 
 <abstract>
 <t>This document defines a <strong>WIMSE Profile</strong> for Transitive Attestation within the Workload Identity in Multi-Service Environments (WIMSE) framework. It addresses the critical problem of <strong>Identity Portability</strong>, where software credentials (e.g., bearer tokens or keys) can be misappropriated and used from unauthorized environments—a risk amplified by the emergence of autonomous <strong>AI Agents</strong> that may move across jurisdictions or be hijacked via <strong>prompt injection attacks</strong>. By providing a standardized <strong>Identity Conveyance</strong> mechanism, this profile cryptographically binds software workloads to their local execution environment (&quot;Proof of Residency&quot;) through a transitive chain of trust. This chain consumes <strong>Evidence</strong> from the underlying platform—supporting both <strong>high-assurance</strong> RATS-based profiles (e.g., {{!I-D.lkspa-wimse-verifiable-geo-fence}}) for residency verification and <strong>standard</strong> Workload Identity Agents for basic co-location proofs—to ensure that an identity is only valid when used from a verified, integral, or geographically compliant host. The integrity and hardware-rooted security of the Workload Identity Agent itself is considered out-of-scope for this document and is addressed in the <strong>Verifiable Geofencing</strong> profile {{!I-D.lkspa-wimse-verifiable-geo-fence}}.</t>
