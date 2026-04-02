@@ -1,6 +1,6 @@
 # Makefile for IETF Draft
 
-DRAFT := draft-mw-wimse-transitive-attestation-00
+DRAFT := draft-mw-wimse-transitive-attestation-01
 MMARK := $(HOME)/go/bin/mmark
 XML2RFC := $(HOME)/local/bin/xml2rfc
 

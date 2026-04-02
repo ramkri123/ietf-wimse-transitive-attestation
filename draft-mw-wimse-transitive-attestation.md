@@ -2,16 +2,16 @@
 title = "Transitive Attestation for Sovereign Workloads: A WIMSE Profile"
 abbrev = "WIMSE-TRANS-POR"
 category = "info"
-docName = "draft-mw-wimse-transitive-attestation-00"
+docName = "draft-mw-wimse-transitive-attestation-01"
 ipr = "trust200902"
 area = "Security"
 workgroup = "WIMSE"
 keyword = ["attestation", "wimse", "transitive", "workload identity", "residency"]
-date = 2026-03-10
+date = 2026-04-03
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "draft-mw-wimse-transitive-attestation-00"
+value = "draft-mw-wimse-transitive-attestation-01"
 stream = "IETF"
 status = "informational"
 
@@ -47,14 +47,6 @@ organization = "Aryaka"
   [author.address]
   email = "srinivasa.addepalli@aryaka.com"
 
-
-[[contributor]]
-initials = "B."
-surname = "Malepati"
-fullname = "Bala Siva Sai Akhil Malepati"
-organization = "Independent"
-  [contributor.address]
-  email = "saiakhil2012@yahoo.com"
 
 %%%
 
@@ -241,6 +233,15 @@ TBD: Discussion on Workload Identity Agent compromise, nonce entropy requirement
 This document has no IANA actions at this time.
 
 {backmatter}
+
+# Contributors
+
+The following individuals have contributed to this document:
+
+Bala Siva Sai Akhil Malepati  
+Independent  
+Email: saiakhil2012@yahoo.com
+
 
 <reference anchor="RFC5705" target="https://www.rfc-editor.org/rfc/rfc5705">
   <front>
